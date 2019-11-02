@@ -35,7 +35,10 @@ public class Client {
     public String getFileMeta(String uri) throws Exception{
         return null;
     }
-    public String listDirectory(String uri) throws Exception{
+    public String[] listSubDirs(String uri) throws Exception{
+        return null;
+    }
+    public String[] listFiles(String uri) throws Exception{
         return null;
     }
 }

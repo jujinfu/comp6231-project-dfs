@@ -7,7 +7,8 @@ public class App {
         try {
             Client client = new Client();
             client.start();
-            client.listDirectory("/");
+            client.listSubDirs("/");
+            client.listFiles("/");
             File file=client.openFile("/test.txt");
             client.saveFile("/test.txt",("Hello "+(new Date().getTime())).getBytes("utf-8"));
             client.closeFile("/text.txt");

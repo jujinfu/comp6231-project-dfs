@@ -17,7 +17,7 @@
             <groupId>org.concordia.comp6231.dfs</groupId>
             <artifactId>server</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
+            <scope>compile</scope>
             <systemPath>${basedir}/../server/target/server-1.0-SNAPSHOT.jar</systemPath>
         </dependency>
     </dependencies>
