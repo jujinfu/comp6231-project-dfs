@@ -1,4 +1,5 @@
-Build Status: https://travis-ci.org/jujinfu/comp6231-project-dfs.svg?branch=master
+Build Status: [![Build Status](https://travis-ci.org/jujinfu/comp6231-project-dfs.svg?branch=master)](https://travis-ci.org/jujinfu/comp6231-project-dfs)
+
 Tool Set:
 
 JDK 1.8 or up, IntelliJ, maven 4.0
