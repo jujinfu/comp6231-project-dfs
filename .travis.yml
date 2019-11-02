@@ -2,4 +2,9 @@ language: java
 jdk: openjdk8
 
 script:
+  - cd client
   - mvn package
+  - cd ..
+  - cd server
+  - mvn package
+  - cd ..
