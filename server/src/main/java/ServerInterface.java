@@ -12,8 +12,8 @@ public interface ServerInterface extends Remote{
     public abstract String getFileMeta(final String uri) throws RemoteException;
 
     //upload & download operations
-    public abstract void download(final String uri) throws RemoteException;
-    public abstract void upload(final String uri) throws  RemoteException;
+    public abstract File download(final String uri) throws RemoteException;
+    public abstract boolean upload(final String uri) throws  RemoteException;
 
     //directory operations
     public abstract String listDirectory(final String uri)throws RemoteException;
