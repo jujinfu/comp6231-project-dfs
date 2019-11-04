@@ -3,18 +3,18 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class Client {
-    ServerInterface rmiServer;
+    AccessServerInterface accessServer;
     Registry registry;
 
     public void start() throws Exception{
         // find the (local) object registry
         registry = LocateRegistry.getRegistry(9999);
         // find the server object
-        rmiServer = (ServerInterface) (registry.lookup("server"));
-        rmiServer.download("Hello World");
+        accessServer = (AccessServerInterface) (registry.lookup("server"));
     }
 
     public File openFile(String uri) throws Exception{
+
         return null;
     }
     public boolean saveFile(String uri,byte[] content) throws Exception{

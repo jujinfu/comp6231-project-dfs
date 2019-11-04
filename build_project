@@ -1,6 +1,4 @@
-apache-maven-3.6.2/bin/mvn install -f storage_server
-
-apache-maven-3.6.2/bin/mvn install -f access_server
+apache-maven-3.6.2/bin/mvn install -f server
 
 apache-maven-3.6.2/bin/mvn install -f client
 

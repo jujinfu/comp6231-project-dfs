@@ -6,14 +6,13 @@ import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.function.Predicate;
 
-public class Server extends UnicastRemoteObject implements ServerInterface {
+public class StorageServer implements StorageServerInterface {
 
     // file path based on linux currently
     private final Path serverStorageRoot= Paths.get("\\tmp\\data");
 
-    Server() throws RemoteException {
+    StorageServer() throws RemoteException {
         super();
         if(!Files.exists(serverStorageRoot)){
             throw new RemoteException("Server root not found");

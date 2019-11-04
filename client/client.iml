@@ -11,7 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="server" />
     <orderEntry type="library" name="Maven: org.concordia.comp6231.dfs:sotrage_server:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="module" module-name="storage_server" />
   </component>
 </module>

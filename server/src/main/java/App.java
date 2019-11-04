@@ -9,7 +9,7 @@ public class App  {
             // create the (local) object registry
             registry = LocateRegistry.createRegistry(9999);
             // bind the object to the name "server"
-            registry.rebind("server", new Server());
+            registry.rebind("server", new AccessServer());
         } catch (Throwable t) {
             t.printStackTrace();
         }
