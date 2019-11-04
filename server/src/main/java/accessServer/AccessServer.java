@@ -1,5 +1,7 @@
 package accessServer;
 
+import storageServer.StorageServer;
+
 import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -8,6 +10,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class AccessServer extends UnicastRemoteObject implements AccessServerInterface,StorageManagementInterface {
 
+    private StorageServer storageServer=new StorageServer();
     public AccessServer() throws RemoteException {
         super();
     }
@@ -23,6 +26,13 @@ public class AccessServer extends UnicastRemoteObject implements AccessServerInt
 
     @Override
     public File openFile(String uri) throws RemoteException {
+        //TODO
+        // 1. check if file exits in db
+        // 2. if no, throw file not found in DB, else, continue
+        // 3. check if file is being locked by other user
+        // 4. if yes, throw file is being used, else continue
+        // 5. lock the file and call storage
+
 
         return null;
     }
@@ -39,6 +49,7 @@ public class AccessServer extends UnicastRemoteObject implements AccessServerInt
 
     @Override
     public boolean createFile(String uri) throws RemoteException {
+
         return false;
     }
 

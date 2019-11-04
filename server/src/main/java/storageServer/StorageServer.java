@@ -25,11 +25,13 @@ public class StorageServer implements StorageServerInterface {
     public File openFile(String uri) throws RemoteException {
         //TODO
         // 1. check if file exits
-        // 2. if no, throw file not found, else, continue
-        // 3. check if file is having a lock other than current user
-        // 4. if yes, throw, file is being used, else continue
-        // 5. lock file and return file object
-        return null;
+        // 2. if no, throw file not found in storage, else continue
+        // 3. Read and return file
+        if(!Files.exists(Paths.get(uri))){
+            throw new RemoteException("File not found in DB");
+        }
+        File f=new File(uri);
+        return f;
     }
 
     @Override
