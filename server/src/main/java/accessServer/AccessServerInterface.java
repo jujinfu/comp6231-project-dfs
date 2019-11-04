@@ -1,14 +1,12 @@
+package accessServer;
+
 import java.io.File;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface AccessServerInterface extends Remote {
 
-    public abstract String getServerConnection(String clientAddress);
-
-    /*
-        wrap of Storage server
-     */
+    /* wrap of Storage server */
     // basic file operations
     public abstract File openFile(final String uri) throws RemoteException;
     public abstract boolean saveFile(final String uri,byte[] content) throws RemoteException;

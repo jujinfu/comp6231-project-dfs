@@ -1,33 +1,29 @@
+package accessServer;
+
 import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-public class AccessServer extends UnicastRemoteObject implements AccessServerInterface {
-    StorageServerInterface rmiServer;
-    Registry registry;
+public class AccessServer extends UnicastRemoteObject implements AccessServerInterface,StorageManagementInterface {
 
-    AccessServer() throws RemoteException {
+    public AccessServer() throws RemoteException {
         super();
-
-    }
-    public void start() throws Exception{
-        // find the (local) object registry
-        registry = LocateRegistry.getRegistry(9999);
-        // find the server object
-        rmiServer = (StorageServerInterface) (registry.lookup("server"));
-        rmiServer.download("Hello World");
     }
 
-    @Override
-    public String getServerConnection(String clientAddress) {
-
-        return null;
+    private String getServerConnection(String clientAddress) {
+        if(clientAddress.contains("location1")){
+            return "server1";
+        }else if(clientAddress.contains("location2")){
+            return "server2";
+        }
+        return "server1";
     }
 
     @Override
     public File openFile(String uri) throws RemoteException {
+
         return null;
     }
 
@@ -79,5 +75,15 @@ public class AccessServer extends UnicastRemoteObject implements AccessServerInt
     @Override
     public boolean deleteDir(String uri) throws RemoteException {
         return false;
+    }
+
+    @Override
+    public void syncFile(String fromAbsoluteUri, String toAbsoluteUri) {
+
+    }
+
+    @Override
+    public void updateFileMeta(String absoluteUri, String property) {
+
     }
 }

@@ -1,3 +1,5 @@
+package storageServer;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +14,7 @@ public class StorageServer implements StorageServerInterface {
     // file path based on linux currently
     private final Path serverStorageRoot= Paths.get("\\tmp\\data");
 
-    StorageServer() throws RemoteException {
+    public StorageServer() throws RemoteException {
         super();
         if(!Files.exists(serverStorageRoot)){
             throw new RemoteException("Server root not found");
