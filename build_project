@@ -1,0 +1,7 @@
+apache-maven-3.6.2/bin/mvn package -f storage_server
+
+apache-maven-3.6.2/bin/mvn package -f access_server
+
+apache-maven-3.6.2/bin/mvn package -f client
+
+

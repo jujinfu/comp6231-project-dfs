@@ -4,7 +4,8 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/client/pom.xml" />
-        <option value="$PROJECT_DIR$/server/pom.xml" />
+        <option value="$PROJECT_DIR$/sotrage_server/pom.xml" />
+        <option value="$PROJECT_DIR$/access_server/pom.xml" />
       </list>
     </option>
   </component>

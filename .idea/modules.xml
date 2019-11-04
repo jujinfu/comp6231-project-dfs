@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/access_server/access_server.iml" filepath="$PROJECT_DIR$/access_server/access_server.iml" />
       <module fileurl="file://$PROJECT_DIR$/client/client.iml" filepath="$PROJECT_DIR$/client/client.iml" />
-      <module fileurl="file://$PROJECT_DIR$/comp6231-project-dfs.iml" filepath="$PROJECT_DIR$/comp6231-project-dfs.iml" />
-      <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/storage_server/storage_server.iml" filepath="$PROJECT_DIR$/storage_server/storage_server.iml" />
     </modules>
   </component>
 </project>
