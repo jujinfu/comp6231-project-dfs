@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>org.concordia.comp6231.dfs</groupId>
-            <artifactId>sotrage_server</artifactId>
+            <artifactId>server</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
