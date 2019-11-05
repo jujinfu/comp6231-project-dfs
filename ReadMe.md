@@ -3,7 +3,7 @@ Build Status: [![Build Status](https://travis-ci.org/jujinfu/comp6231-project-df
 Tool Set:
 
 JDK 1.8 or up, IntelliJ, maven 4.0
-MySql Server8, MySql Workbench(optional)
+MySql Server8, MySql Workbench(optional),lombok 1.18.10
 
 client
 simulates a client operations
