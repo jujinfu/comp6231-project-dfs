@@ -10,3 +10,7 @@ simulates a client operations
 
 server
 runs at a server node
+
+Use lombok in idea:
+1. Download lombok plugin. File-> setting -> Plugins--> search 'lombok' -> download the one call 'Lombok' -> install and reboot IDE
+2. Enable annotation processor. File -> setting -> search 'annotation processor' -> tick 'Enable annotation processing' -> Apply -> 'OK'
