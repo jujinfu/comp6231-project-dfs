@@ -37,7 +37,6 @@ public class App  {
         System.out.println(file.toString());
         System.out.println("parent id = " + file.getParent().getId());
         em.close();
-
     }
 
 }

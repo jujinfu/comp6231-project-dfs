@@ -8,7 +8,7 @@ public interface StorageServerInterface{
 
     // basic file operations
     public abstract File openFile(final String absoluteUri) throws RemoteException;
-    public abstract boolean saveFile(final String absoluteUri,byte[] content) throws RemoteException;
+    public abstract boolean saveFile(final String absoluteUri,int offset,byte[] content) throws RemoteException;
     public abstract boolean closeFile(final String absoluteUri) throws RemoteException;
     public abstract boolean createFile(final String absoluteUri) throws RemoteException;
     public abstract boolean deleteFile(final String absoluteUri) throws RemoteException;

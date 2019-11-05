@@ -24,6 +24,13 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = "FileDirInfo.findById",
                 query = "SELECT f FROM file_dir_info f where f.id = :id"),
+        @NamedQuery(name="FileDirInfo.fileExists",
+            query="select file_dir_info from file_dir_info where name=:name and parent=:parent"),
+        @NamedQuery(name="FileDirInfo.getChildren",
+                query="select file_dir_info from file_dir_info where parent=:parent"),
+        @NamedQuery(name="FileDirInfo.getRootDir",
+                query="select file_dir_info from file_dir_info where parent=1"),
+
 })
 public class FileDirInfo {
 

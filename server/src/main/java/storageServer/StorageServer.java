@@ -23,10 +23,12 @@ public class StorageServer implements StorageServerInterface {
 
     @Override
     public File openFile(String uri) throws RemoteException {
-        //TODO
-        // 1. check if file exits
-        // 2. if no, throw file not found in storage, else continue
-        // 3. Read and return file
+        /*
+        TODO
+         1. check if file exits
+         2. if no, throw file not found in storage, else continue
+         3. Read and return file
+        */
         if(!Files.exists(Paths.get(uri))){
             throw new RemoteException("File not found in DB");
         }
@@ -35,35 +37,46 @@ public class StorageServer implements StorageServerInterface {
     }
 
     @Override
-    public boolean saveFile(String uri, byte[] content) throws RemoteException {
-        //TODO
-        // 1. check if file exists
-        // 2. if no, throw file not found, else, continue
-        // 3. check if file is having a lock other than current user
-        // 4. if yes, throw file is being used, else continue
-        // 5. update content
-        // 6. update metadata in db
+    public boolean saveFile(String uri, int offset, byte[] content) throws RemoteException {
+        /*
+        TODO
+         1. check if file exists
+         2. if no, throw file not found, else, continue
+         3. check if file is having a lock other than current user
+         4. if yes, throw file is being used, else continue
+         5. update content
+         6. update metadata in db
+        */
+        if(!Files.exists(Paths.get(uri))){
+            throw new RemoteException("File not found in DB");
+        }
+
+
         return false;
     }
 
     @Override
     public boolean closeFile(String uri) throws RemoteException {
-        //TODO
-        // 1. check if file exists
-        // 2. if no, throw file not found, else, continue
-        // 3. check if file is have a lock other than current user
-        // 4. if yes, throw file is being used, else, continue
-        // 5. remove lock
+        /*
+        TODO
+         1. check if file exists
+         2. if no, throw file not found, else, continue
+         3. check if file is have a lock other than current user
+         4. if yes, throw file is being used, else, continue
+         5. remove lock
+        */
         return false;
     }
 
     @Override
     public boolean createFile(String uri) throws RemoteException {
-        //TODO
-        // 1. check if file exists, and check if path not exists
-        // 2. if yes, throw FileExists or path not found
-        // 3. if no, create file in target location with desired name
-        // 4. register with DB
+        /*
+        TODO
+         1. check if file exists, and check if path not exists
+         2. if yes, throw FileExists or path not found
+         3. if no, create file in target location with desired name
+         4. register with DB
+        */
         try{
             String filePath=uri.substring(0,uri.lastIndexOf('/'));
             // !db.directories.any(uri);
@@ -84,12 +97,14 @@ public class StorageServer implements StorageServerInterface {
 
     @Override
     public boolean deleteFile(String uri) throws RemoteException {
-        //TODO
-        // 1. check if file exists
-        // 2. if no, throw file not found
-        // 3. if yes, check if file is being locked
-        // 4. if locked, throw file is currently being used
-        // 5. if not locked, remove file and remove DB record
+        /*
+        TODO
+         1. check if file exists
+         2. if no, throw file not found
+         3. if yes, check if file is being locked
+         4. if locked, throw file is currently being used
+         5. if not locked, remove file and remove DB record
+        */
         try {
             // db.files.any(uri);
             if (!Files.exists(Paths.get(uri))) {
