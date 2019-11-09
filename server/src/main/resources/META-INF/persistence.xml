@@ -13,7 +13,7 @@
             <!--fill username in the value attr-->
             <property name="javax.persistence.jdbc.user" value="root" />
             <!--fill password in the value attr-->
-            <property name="javax.persistence.jdbc.password" value="12345678" />
+            <property name="javax.persistence.jdbc.password" value="Comp6231." />
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.hbm2ddl.auto" value="update" />
         </properties>
