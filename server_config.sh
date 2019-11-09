@@ -1,11 +1,13 @@
 
+# create server dir for storing data
+mkdir /tmp/data
+
 sudo yum install git
 
 sudo yum install java-1.8.0-openjdk
 sudo yum install java-1.8.0-openjdk-devel
 
-sudo yum install mariadb.x86_64
-
+sudo yum install mariadb
 sudo yum install mariadb-server
 
 sudo systemctl start mariadb.service

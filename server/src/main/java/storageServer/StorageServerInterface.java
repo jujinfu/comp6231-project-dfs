@@ -13,6 +13,7 @@ public interface StorageServerInterface{
     public abstract boolean createFile(final String absoluteUri) throws RemoteException;
     public abstract boolean deleteFile(final String absoluteUri) throws RemoteException;
     public abstract String getFileMeta(final String absoluteUri) throws RemoteException;
+    public abstract boolean fileExists(final String absoluteUri) throws RemoteException;
 
     // download operations
     public abstract File download(final String absoluteUri) throws RemoteException;

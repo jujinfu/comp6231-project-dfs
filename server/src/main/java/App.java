@@ -1,11 +1,9 @@
 import accessServer.AccessServer;
 import accessServer.domain.EntityManagerHelper;
 import accessServer.domain.entities.FileDirInfo;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import java.io.File;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 

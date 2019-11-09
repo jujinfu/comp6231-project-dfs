@@ -12,11 +12,11 @@ import java.util.ArrayList;
 public class StorageServer implements StorageServerInterface {
 
     // file path based on linux currently
-    private final Path serverStorageRoot= Paths.get("\\tmp\\data");
+    private final Path serverStorageRoot= Paths.get("/tmp/data");
 
     public StorageServer() throws RemoteException {
         super();
-        if(!Files.exists(serverStorageRoot)){
+        if(Files.notExists(serverStorageRoot)){
             throw new RemoteException("Server root not found");
         }
     }
@@ -29,6 +29,8 @@ public class StorageServer implements StorageServerInterface {
          2. if no, throw file not found in storage, else continue
          3. Read and return file
         */
+        if(!uri.startsWith(serverStorageRoot.toString()))
+            uri=serverStorageRoot.toString()+uri;
         if(!Files.exists(Paths.get(uri))){
             throw new RemoteException("File not found in DB");
         }
@@ -78,6 +80,8 @@ public class StorageServer implements StorageServerInterface {
          4. register with DB
         */
         try{
+            if(!uri.startsWith(serverStorageRoot.toString()))
+                uri=serverStorageRoot.toString()+uri;
             String filePath=uri.substring(0,uri.lastIndexOf('/'));
             // !db.directories.any(uri);
             if(!Files.exists(Paths.get(filePath))){
@@ -94,7 +98,12 @@ public class StorageServer implements StorageServerInterface {
             throw new RemoteException(e.getMessage());
         }
     }
-
+    @Override
+    public boolean fileExists(String uri) throws RemoteException{
+        if(!uri.startsWith(serverStorageRoot.toString()))
+            uri=serverStorageRoot.toString()+uri;
+        return Files.exists(Paths.get(uri));
+    }
     @Override
     public boolean deleteFile(String uri) throws RemoteException {
         /*
@@ -106,6 +115,8 @@ public class StorageServer implements StorageServerInterface {
          5. if not locked, remove file and remove DB record
         */
         try {
+            if(!uri.startsWith(serverStorageRoot.toString()))
+                uri=serverStorageRoot.toString()+uri;
             // db.files.any(uri);
             if (!Files.exists(Paths.get(uri))) {
                 throw new IOException("file not exists");
