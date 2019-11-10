@@ -1,13 +1,15 @@
 package storageServer;
 
-import java.io.File;
-import java.io.IOException;
+import com.mysql.cj.xdevapi.RemoveStatement;
+
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class StorageServer implements StorageServerInterface {
 
@@ -19,55 +21,6 @@ public class StorageServer implements StorageServerInterface {
         if(Files.notExists(serverStorageRoot)){
             throw new RemoteException("Server root not found");
         }
-    }
-
-    @Override
-    public File openFile(String uri) throws RemoteException {
-        /*
-        TODO
-         1. check if file exits
-         2. if no, throw file not found in storage, else continue
-         3. Read and return file
-        */
-        if(!uri.startsWith(serverStorageRoot.toString()))
-            uri=serverStorageRoot.toString()+uri;
-        if(!Files.exists(Paths.get(uri))){
-            throw new RemoteException("File not found in DB");
-        }
-        File f=new File(uri);
-        return f;
-    }
-
-    @Override
-    public boolean saveFile(String uri, int offset, byte[] content) throws RemoteException {
-        /*
-        TODO
-         1. check if file exists
-         2. if no, throw file not found, else, continue
-         3. check if file is having a lock other than current user
-         4. if yes, throw file is being used, else continue
-         5. update content
-         6. update metadata in db
-        */
-        if(!Files.exists(Paths.get(uri))){
-            throw new RemoteException("File not found in DB");
-        }
-
-
-        return false;
-    }
-
-    @Override
-    public boolean closeFile(String uri) throws RemoteException {
-        /*
-        TODO
-         1. check if file exists
-         2. if no, throw file not found, else, continue
-         3. check if file is have a lock other than current user
-         4. if yes, throw file is being used, else, continue
-         5. remove lock
-        */
-        return false;
     }
 
     @Override
@@ -134,46 +87,99 @@ public class StorageServer implements StorageServerInterface {
     }
 
     @Override
-    public String getFileMeta(String uri) throws RemoteException {
-        //TODO
-        //
-        return null;
+    public String getLastModifiedTime(String uri) throws RemoteException {
+        //TODO I dont know what we need to return here as metadata
+        try {
+            if (!uri.startsWith(serverStorageRoot.toString()))
+                uri = serverStorageRoot.toString() + uri;
+            if (!Files.exists(Paths.get(uri))) {
+                throw new IOException("file not exists");
+            }
+            if (!Files.isReadable(Paths.get(uri))) {
+                throw new IOException("file is currently being used");
+            }
+
+            return Files.getLastModifiedTime(Paths.get(uri)).toString();
+        } catch (Exception e){
+            throw new RemoteException(e.getMessage());
+        }
     }
 
+    @Override
+    public boolean uploadWithOverride(String uri,File file) throws RemoteException{
+        //TODO
+        try {
+            if (!uri.startsWith(serverStorageRoot.toString()))
+                uri = serverStorageRoot.toString() + uri;
+
+            String filePath=uri.substring(0,uri.lastIndexOf('/'));
+            // !db.directories.any(uri);
+            if(!Files.exists(Paths.get(filePath))){
+                throw new IOException("path not found");
+            }
+
+            Files.deleteIfExists(Paths.get(uri));
+            Files.createFile(Paths.get(uri));
+
+            BufferedReader fileReader = new BufferedReader(new FileReader(file));
+            StringBuilder contentBuilder=new StringBuilder();
+            String s="";
+            while ((s=fileReader.readLine())!=null ) {
+                contentBuilder.append(s);
+            }
+            Files.write(Paths.get(uri), contentBuilder.toString().getBytes("utf-8"));
+            return true;
+        }catch(Exception e){
+            throw new RemoteException(e.getMessage());
+        }
+    }
     @Override
     public File download(String uri) throws RemoteException {
         //TODO
         // make a copy of the file and send to client
-        return null;
+
+        try{
+            if (!uri.startsWith(serverStorageRoot.toString()))
+                uri = serverStorageRoot.toString() + uri;
+            if(!Files.exists(Paths.get(uri))){
+                throw new IOException("path not found");
+            }
+
+            return new File(uri);
+        }catch (Exception e){
+            throw new RemoteException(e.getMessage());
+        }
     }
 
     @Override
     public String[] listFiles(String uri) throws RemoteException {
         //TODO here we shall grab the directory content from database
 
-        //this is just a mock up
-        ArrayList<String> content=new ArrayList<String>();
         try {
-            Files.list(serverStorageRoot)
+            if(!uri.startsWith(serverStorageRoot.toString()))
+                uri=serverStorageRoot.toString()+uri;
+            ArrayList<String> content= new ArrayList<>();
+            Files.list(Paths.get(uri))
                     .filter(Files::isRegularFile)
                     .forEach(x -> content.add(x.toString()));
-
-            return (String[])content.toArray();
+            String[] a=new String[content.size()];
+            return content.toArray(a);
         }catch (IOException e){
             throw new RemoteException(e.getMessage());
         }
     }
-
     @Override
     public String[] listSubDirs(String uri) throws RemoteException {
         //TODO we should also grab list from DB
-
         try {
+            if(!uri.startsWith(serverStorageRoot.toString()))
+                uri=serverStorageRoot.toString()+uri;
             ArrayList<String> content=new ArrayList<String>();
-            Files.list(serverStorageRoot)
+            Files.list(Paths.get(uri))
                     .filter(Files::isDirectory)
                     .forEach(x->content.add(x.toString()));
-            return (String[])content.toArray();
+            String[] a=new String[content.size()];
+            return content.toArray(a);
         }catch(IOException e){
             throw new RemoteException(e.getMessage());
         }
@@ -188,9 +194,32 @@ public class StorageServer implements StorageServerInterface {
         // 4. if yes, throw dir exists, else, continue
         // 5. create dir in target location with desired name
         // 6. register with DB
-        return false;
-    }
 
+        try{
+            if(!uri.startsWith(serverStorageRoot.toString()))
+                uri=serverStorageRoot.toString()+uri;
+            String dirPath=uri.substring(0,uri.lastIndexOf('/'));
+            // !db.directories.any(uri);
+            if(!Files.exists(Paths.get(dirPath))){
+                throw new IOException("path not found");
+            }
+            // db.files.any(uri);
+            if(Files.exists(Paths.get(uri))){
+                throw new IOException("folder already exists");
+            }
+            Files.createDirectory(Paths.get(uri));
+            // db.files.add(uri);
+            return true;
+        }catch(IOException e){
+            throw new RemoteException(e.getMessage());
+        }
+    }
+    @Override
+    public boolean dirExists(String uri) throws RemoteException{
+        if(!uri.startsWith(serverStorageRoot.toString()))
+            uri=serverStorageRoot.toString()+uri;
+        return Files.exists(Paths.get(uri));
+    }
     @Override
     public boolean deleteDir(String uri) throws RemoteException {
         //TODO
@@ -199,6 +228,22 @@ public class StorageServer implements StorageServerInterface {
         // 3. check if dir is empty
         // 4. if no, throw dir not empty, else, continue
         // 6. remove dir and remove db record
-        return false;
+        try {
+            if(!uri.startsWith(serverStorageRoot.toString()))
+                uri=serverStorageRoot.toString()+uri;
+
+            if (!Files.exists(Paths.get(uri))) {
+                throw new IOException("dir does not exist");
+            }
+
+            if(Files.list(Paths.get(uri)).count()!=0){
+                throw new IOException("dir is not empty");
+            }
+
+            Files.delete(Paths.get(uri));
+            return true;
+        }catch(IOException e){
+            throw new RemoteException(e.getMessage());
+        }
     }
 }
