@@ -8,9 +8,6 @@ public interface AccessServerInterface extends Remote {
 
     /* wrap of Storage server */
     // basic file operations
-    public abstract File openFile(final String uri) throws RemoteException;
-    public abstract boolean saveFile(final String uri,byte[] content) throws RemoteException;
-    public abstract boolean closeFile(final String uri) throws RemoteException;
     public abstract boolean createFile(final String uri) throws RemoteException;
     public abstract boolean deleteFile(final String uri) throws RemoteException;
     public abstract String getFileMeta(final String uri) throws RemoteException;

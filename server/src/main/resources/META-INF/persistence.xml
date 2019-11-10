@@ -4,12 +4,12 @@
              http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
 
-    <persistence-unit name="MATADATADB">
+    <persistence-unit name="MATADATADB" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/test" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://34.202.163.106:3306/dfs" />
             <!--fill username in the value attr-->
             <property name="javax.persistence.jdbc.user" value="root" />
             <!--fill password in the value attr-->
