@@ -6,20 +6,31 @@ import org.hibernate.dialect.FirebirdDialect;
 import storageServer.StorageServer;
 import storageServer.StorageServerInterface;
 
+import javax.persistence.Access;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class AccessServer extends UnicastRemoteObject implements StorageServerInterface,StorageManagementInterface {
+public class AccessServer extends UnicastRemoteObject implements AccessServerInterface,StorageManagementInterface {
 
     private StorageServer storageServer=new StorageServer();
     private EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
+
+    private ServerSocket ss;
+    private ArrayList<Socket> clients;
 
     public AccessServer() throws RemoteException {
         super();

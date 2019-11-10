@@ -1,42 +1,48 @@
 import accessServer.AccessServerInterface;
 import org.apache.commons.io.FileUtils;
-import java.io.File;
-import java.io.FileNotFoundException;
+
+import java.io.*;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class Client {
-    AccessServerInterface accessServer;
-    Registry registry;
+public class Client extends Commands {
+    private String serverIP="34.202.163.106";
+    private int serverPort=9999;
 
-    public void start() throws Exception {
-        // find the (local) object registry
-        registry = LocateRegistry.getRegistry(9999);
-        // find the server object
-        accessServer = (AccessServerInterface) (registry.lookup("server"));
+
+    public String createFile(String uri) throws Exception{
+        Socket clientSocket=new Socket(serverIP,serverPort);
+        PrintWriter printWriter=new PrintWriter(clientSocket.getOutputStream(), true);
+        printWriter.println(create_file_cmd+" "+uri);
+        String resp = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())).readLine();
+        return resp;
     }
 
-    public File openFile(String uri) throws Exception {
-        if (!Files.exists(Paths.get(uri))) {
-            throw new FileNotFoundException("Unable to open file in path " + uri);
-        }
-        return new File(uri);
+    public String deleteFile(String uri) throws Exception {
+        Socket clientSocket=new Socket(serverIP,serverPort);
+        PrintWriter printWriter=new PrintWriter(clientSocket.getOutputStream(), true);
+        printWriter.println(delete_file_cmd+" "+uri);
+        String resp = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())).readLine();
+        return resp;
     }
 
-    public boolean saveFile(String uri, byte[] content) throws Exception {
-       // byte[] content = FileUtils.readFileToByteArray(openFile(uri));
-        accessServer.saveFile(uri, content);
-        return false;
+    public String createDir(String uri) throws Exception{
+        Socket clientSocket=new Socket(serverIP,serverPort);
+        PrintWriter printWriter=new PrintWriter(clientSocket.getOutputStream(), true);
+        printWriter.println(create_dir_cmd+" "+uri);
+        String resp = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())).readLine();
+        return resp;
     }
 
-    public boolean closeFile(String uri) throws Exception {
-        return false;
-    }
-
-    public boolean deleteFile(String uri) throws Exception {
-        return false;
+    public String deleteDir(String uri) throws Exception{
+        Socket clientSocket=new Socket(serverIP,serverPort);
+        PrintWriter printWriter=new PrintWriter(clientSocket.getOutputStream(), true);
+        printWriter.println(delete_dir_cmd+" "+uri);
+        String resp = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())).readLine();
+        return resp;
     }
 
     public boolean uploadFile(String uri, File file) throws Exception {

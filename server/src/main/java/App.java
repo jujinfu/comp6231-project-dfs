@@ -4,26 +4,40 @@ import accessServer.domain.entities.FileDirInfo;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.io.IOException;
+import java.net.Socket;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.concurrent.CompletableFuture;
 
 public class App  {
 
     private static EntityManagerFactory factory;
 
-    public static void main(String args[]) {
-        Registry registry;
-        try {
-            // create the (local) object registry
-            registry = LocateRegistry.createRegistry(9999);
-            // bind the object to the name "server"
-            registry.rebind("server", new AccessServer());
-        } catch (Throwable t) {
-            t.printStackTrace();
+    public static void main(String args[]) throws Exception {
+        ServerController sc=new ServerController();
+        sc.listenConnection(9999);
+        while(true) {
+            Socket client=sc.acceptConnection();
+            CompletableFuture.runAsync(()->{
+                while(true) {
+                    try {
+                        String s=sc.processMessage(client);
+                        sc.sendMessage(s,client);;
+                    } catch (IOException e) {
+                        if(e.getMessage()=="Connection reset") {
+                            sc.removeClient(client);
+                            return;
+                        }
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
 
-        factory = EntityManagerHelper.getEntityManagerFactory();
-        testDB();
+        //factory = EntityManagerHelper.getEntityManagerFactory();
+        //testDB();
 
     }
 
