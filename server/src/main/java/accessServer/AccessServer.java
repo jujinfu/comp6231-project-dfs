@@ -67,13 +67,13 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
          9. return result
         */
 
-        if (fileExists(uri)) {
-            throw new RemoteException("File exists in db");
-        }
+        //if (fileExists(uri)) {
+          //  throw new RemoteException("File exists in db");
+        //}
         try{
             if(storageServer.createFile(uri)){
+                //FileDirInfoRepository.createNewFile(uri);
             }
-
         }
         catch(Exception e){
             throw new Exception(e.getMessage());
@@ -89,7 +89,14 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
 
     @Override
     public boolean deleteFile(String uri) throws Exception {
-        return false;
+        if(!fileExists(uri)){
+            throw new Exception("file not found");
+        }
+        FileDirInfo file=FileDirInfoRepository.getFile(uri);
+        if(storageServer.deleteFile(uri)){
+            FileDirInfoRepository.deleteFileById(file.getId());
+        }
+        return true;
     }
 
     @Override

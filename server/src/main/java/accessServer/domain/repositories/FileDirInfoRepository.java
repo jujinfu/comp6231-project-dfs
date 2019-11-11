@@ -46,31 +46,23 @@ public class FileDirInfoRepository {
         return files;
     }
 
-    public static List<FileDirInfo> getFileByNameParentName(String name, String parentName) {
-        EntityManager em = factory.createEntityManager();
-        List<FileDirInfo> files = em
-                .createNamedQuery("FileDirInfo.fileExists", FileDirInfo.class)
-                .setParameter("name", name)
-                .setParameter("parent", parentName)
-                .getResultList();
-        em.close();
-        return files;
-    }
-
-    // to check if file exists in db
-    //"\test_dir\test.txt"
-    public static boolean exists(String uri){
+    public static FileDirInfo getFile(String uri){
         if(!uri.startsWith("\\"))
-            return false;
+            return null;
         String[] list=uri.split("\\\\");
         String rootName=getRoot().getName();
+        FileDirInfo fileDirInfo=null;
         for(int i=1;i<list.length;i++){
-            FileDirInfo fileDirInfo= getFileInDir(list[i],rootName);
+            fileDirInfo= getFileInDir(list[i],rootName);
             if(fileDirInfo==null)
-                return false;
+                return null;
             rootName=fileDirInfo.getName();
         }
-        return true;
+        return fileDirInfo;
+    }
+
+    public static boolean exists(String uri){
+        return getFile(uri)==null;
     }
 
     private static FileDirInfo getFileInDir(String fileName,String parentName){
@@ -94,10 +86,9 @@ public class FileDirInfoRepository {
         return null;
     }
 
-
-
-    public static FileDirInfo createNewFile(FileDirInfo fileDirInfo){
-        fileDirInfo.setDir(false);
+    public static FileDirInfo createNewFile(String uri){
+        FileDirInfo fileDirInfo=new FileDirInfo();
+        fileDirInfo.setName(uri.substring(uri.lastIndexOf("\\")));
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
         em.persist(fileDirInfo);
