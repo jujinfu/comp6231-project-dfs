@@ -36,12 +36,13 @@ public class StorageServer implements StorageServerInterface {
             if(!uri.startsWith(serverStorageRoot.toString()))
                 uri=serverStorageRoot.toString()+uri;
             String filePath=uri.substring(0,uri.lastIndexOf('\\'));
-            System.out.println(filePath);
+
             // !db.directories.any(uri);
-            if(!Files.exists(Paths.get(filePath))){
-                throw new IOException("path not found");
-            }
+            //if(!Files.exists(Paths.get(filePath))){
+             //   throw new IOException("path not found");
+            //}
             // db.files.any(uri);
+            System.out.println(uri);
             if(Files.exists(Paths.get(uri))){
                 throw new IOException("file already exists");
             }
