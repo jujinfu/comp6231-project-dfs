@@ -13,6 +13,7 @@ public class Client extends Commands {
         Socket clientSocket=new Socket(serverIP,serverPort);
         PrintWriter printWriter=new PrintWriter(clientSocket.getOutputStream(), true);
         printWriter.println(create_file_cmd+" "+uri);
+        System.out.println("Send to server: "+create_file_cmd+" "+uri);
         String resp = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())).readLine();
         return resp;
     }
@@ -42,7 +43,6 @@ public class Client extends Commands {
     }
 
     public boolean uploadFile(String uri, File file) throws Exception {
-        byte[] content = FileUtils.readFileToByteArray(file);
         //rmiServer.createFile(uri);
         return false;
     }

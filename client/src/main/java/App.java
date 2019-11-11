@@ -53,8 +53,8 @@ public class App extends Commands{
     public static void help(){
         System.out.println("command example:");
         System.out.println("help # show instructions");
-        System.out.println(create_file_cmd+" "+"/test.txt # create a file named test.txt at root location");
-        System.out.println(create_file_cmd+" "+"/testdir/test.txt # create a file named test.txt under testdir folder");
+        System.out.println(create_file_cmd+" "+"\\test.txt # create a file named test.txt at root location");
+        System.out.println(create_file_cmd+" "+"\\testdir\\test.txt # create a file named test.txt under testdir folder");
         System.out.println();
         System.out.println(create_file_cmd+"\n"+delete_file_cmd);
         System.out.println(create_dir_cmd+"\n"+delete_dir_cmd);
