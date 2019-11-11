@@ -1,12 +1,8 @@
-import accessServer.AccessServerInterface;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+
 
 public class Client extends Commands {
     private String serverIP="34.202.163.106";
