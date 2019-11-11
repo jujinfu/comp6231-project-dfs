@@ -85,6 +85,7 @@ public class StorageServerTest {
         if(storageServer==null)
             storageServer=new StorageServer();
         String localFile="test_upload.txt";
+        Files.deleteIfExists(Paths.get(localFile));
         Files.createFile(Paths.get(localFile));
         String content="Hello World!";
         Files.write(Paths.get(localFile),content.getBytes("utf-8"));
