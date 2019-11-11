@@ -67,7 +67,7 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
          9. return result
         */
 
-        if (FileDirInfoRepository.exists(uri)) {
+        if (fileExists(uri)) {
             throw new RemoteException("File exists in db");
         }
         try{
