@@ -7,7 +7,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-class StorageServerTest {
+public class StorageServerTest {
 
     private StorageServer storageServer;
 
@@ -17,12 +17,12 @@ class StorageServerTest {
 
     // caution: this will remove everything under root
     @BeforeEach
-    void cleanupServerRoot(){
+    public void cleanupServerRoot(){
 
     }
 
     @Test
-    void create_exists_deleteFileTest() throws Exception{
+    public void create_exists_deleteFileTest() throws Exception{
         if(storageServer==null)
             storageServer=new StorageServer();
         String uri="/test_file.txt";
@@ -32,7 +32,7 @@ class StorageServerTest {
     }
 
     @Test
-    void create_exists_deleteDirTest() throws Exception {
+    public void create_exists_deleteDirTest() throws Exception {
         if(storageServer==null)
             storageServer=new StorageServer();
         String uri="/test_folder";
@@ -42,7 +42,7 @@ class StorageServerTest {
     }
 
     @Test
-    void listDirTest()throws Exception{
+    public void listDirTest()throws Exception{
         if(storageServer==null)
             storageServer=new StorageServer();
 
@@ -69,7 +69,7 @@ class StorageServerTest {
     }
 
     @Test
-    void testGetLastModifiedTime() throws Exception{
+    public void testGetLastModifiedTime() throws Exception{
         if(storageServer==null)
             storageServer=new StorageServer();
         String uri="/test_folder";
@@ -81,7 +81,7 @@ class StorageServerTest {
     }
 
     @Test
-    void uploadTest() throws Exception{
+    public void uploadTest() throws Exception{
         if(storageServer==null)
             storageServer=new StorageServer();
         String localFile="test_upload.txt";
@@ -97,7 +97,7 @@ class StorageServerTest {
     }
 
     @Test
-    void downloadTest() throws Exception{
+    public void downloadTest() throws Exception{
         if(storageServer==null)
             storageServer=new StorageServer();
         String uri="/test_download.txt";
