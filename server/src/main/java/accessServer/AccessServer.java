@@ -73,6 +73,7 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
         try{
             if(storageServer.createFile(uri)){
                 //FileDirInfoRepository.createNewFile(uri);
+
             }
         }
         catch(Exception e){
