@@ -19,7 +19,7 @@ public class StorageServer implements StorageServerInterface {
     public StorageServer() throws RemoteException {
         super();
         if(Files.notExists(serverStorageRoot)){
-            throw new RemoteException("Server root not found");
+            //throw new RemoteException("Server root not found");
         }
     }
 

@@ -66,13 +66,14 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
          8. Save DB records
          9. return result
         */
-        List<FileDirInfo> file = FileDirInfoRepository.getFileByNameParentName(getFileName(uri), getFileParent(uri));
-        if (file.size() == 0) {
-            throw new RemoteException("File not found in db");
-        }
 
+        if (FileDirInfoRepository.isExists(uri)) {
+            throw new RemoteException("File exists in db");
+        }
         try{
-            storageServer.createFile(uri);
+            if(storageServer.createFile(uri)){
+            }
+
         }
         catch(Exception e){
             throw new Exception(e.getMessage());

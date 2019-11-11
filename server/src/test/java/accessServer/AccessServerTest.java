@@ -15,14 +15,14 @@ public class AccessServerTest {
     void fileExistsTest() throws Exception{
         if(accessServer==null)
             accessServer=new AccessServer();
-        String uri="/as_exist_file.txt";
+        String uri="\\as_exist_file.txt";
         assert(accessServer.fileExists(uri));
     }
     @Test
     void createFileTest() throws Exception{
         if(accessServer==null)
             accessServer=new AccessServer();
-        String uri="/as_create_file.txt";
+        String uri="\\as_create_file.txt";
         assert(accessServer.createFile(uri));
         assert(accessServer.fileExists(uri));
         assert(accessServer.deleteFile(uri));

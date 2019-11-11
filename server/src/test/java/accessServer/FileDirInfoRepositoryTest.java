@@ -3,6 +3,7 @@ package accessServer;
 import accessServer.domain.EntityManagerHelper;
 import accessServer.domain.entities.FileDirInfo;
 import accessServer.domain.repositories.FileDirInfoRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManager;
@@ -14,6 +15,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class FileDirInfoRepositoryTest {
 
+
+    @Test
+    public void testIsExists(){
+        String uri="\\sub1\\sub2\\some.txt";
+        FileDirInfoRepository.isExists(uri);
+
+    }
     //pay attentation to data, I didn't prepare data
     @Test
     public void testGetFileById() {
