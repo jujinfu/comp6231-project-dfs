@@ -3,6 +3,8 @@ package accessServer;
 
 import org.junit.jupiter.api.Test;
 
+import java.rmi.RemoteException;
+
 public class AccessServerTest {
 
     private AccessServer accessServer;
@@ -12,23 +14,38 @@ public class AccessServerTest {
     }
 
     @Test
-    public void fileExistsTest() throws Exception{
-        if(accessServer==null)
-            accessServer=new AccessServer();
-        String uri="\\sub1\\sub2\\some.txt";
-        assert(accessServer.fileExists(uri));
-        System.out.println("testing random file");
-        uri="\\random_file.txt";
-        assert(!accessServer.fileExists(uri));
+    public void fileExistsTest() {
+        try {if(accessServer==null) {
+
+                accessServer=new AccessServer();
+                String uri="\\sub1\\sub2\\some.txt";
+                assert(accessServer.fileExists(uri));
+                System.out.println("testing random file");
+                uri="\\random_file.txt";
+                assert(!accessServer.fileExists(uri));
+
+        }            } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
     @Test
-    public void createFileTest() throws Exception{
-        if(accessServer==null)
-            accessServer=new AccessServer();
-        String uri="\\as_create_file.txt";
-        assert(accessServer.createFile(uri));
-        assert(accessServer.fileExists(uri));
-        assert(accessServer.deleteFile(uri));
+    public void createFileTest(){
+        try {
+            if(accessServer==null) {
+
+                    accessServer=new AccessServer();
+
+            }
+            String uri="\\as_create_file.txt";
+            assert(accessServer.createFile(uri));
+            assert(accessServer.fileExists(uri));
+            assert(accessServer.deleteFile(uri));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
