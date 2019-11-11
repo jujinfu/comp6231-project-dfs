@@ -12,7 +12,7 @@ public class AccessServerTest {
     }
 
     @Test
-    void fileExistsTest() throws Exception{
+    public void fileExistsTest() throws Exception{
         if(accessServer==null)
             accessServer=new AccessServer();
         String uri="\\sub1\\sub2\\some.txt";
@@ -23,7 +23,7 @@ public class AccessServerTest {
 
     }
     @Test
-    void createFileTest() throws Exception{
+    public void createFileTest() throws Exception{
         if(accessServer==null)
             accessServer=new AccessServer();
         String uri="\\as_create_file.txt";
