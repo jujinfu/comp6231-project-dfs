@@ -14,7 +14,7 @@ import java.util.Calendar;
 public class StorageServer implements StorageServerInterface {
 
     // file path based on linux currently
-    private final Path serverStorageRoot= Paths.get("\\tmp\\data");
+    private final Path serverStorageRoot= Paths.get("/tmp/data");
 
     public StorageServer() throws RemoteException {
         super();
@@ -35,12 +35,12 @@ public class StorageServer implements StorageServerInterface {
         try{
             if(!uri.startsWith(serverStorageRoot.toString()))
                 uri=serverStorageRoot.toString()+uri;
-            String filePath=uri.substring(0,uri.lastIndexOf('\\'));
+            String filePath=uri.substring(0,uri.lastIndexOf('/'));
 
             // !db.directories.any(uri);
-            //if(!Files.exists(Paths.get(filePath))){
-             //   throw new IOException("path not found");
-            //}
+            if(!Files.exists(Paths.get(filePath))){
+               throw new IOException("path not found");
+            }
             // db.files.any(uri);
             System.out.println(uri);
             if(Files.exists(Paths.get(uri))){
