@@ -79,7 +79,7 @@ public class ServerController extends Commands{
 
     private String handleCmd(String msg) throws Exception {
         String cmd=msg.split(" ")[0];
-        String uri=msg.split("")[1];
+        String uri=msg.split(" ")[1];
         AccessServer accessServer=new AccessServer();
         if(cmd.equals(create_file_cmd)){
             accessServer.createFile(uri);
