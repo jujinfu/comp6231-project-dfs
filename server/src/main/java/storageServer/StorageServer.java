@@ -14,7 +14,7 @@ import java.util.Calendar;
 public class StorageServer implements StorageServerInterface {
 
     // file path based on linux currently
-    private final Path serverStorageRoot= Paths.get("/tmp/data");
+    private final Path serverStorageRoot= Paths.get("\\tmp\\data");
 
     public StorageServer() throws RemoteException {
         super();
