@@ -115,7 +115,7 @@ public class StorageServer implements StorageServerInterface {
             if (!uri.startsWith(serverStorageRoot.toString()))
                 uri = serverStorageRoot.toString() + uri;
 
-            String filePath=uri.substring(0,uri.lastIndexOf('\\'));
+            String filePath=uri.substring(0,uri.lastIndexOf('/'));
             // !db.directories.any(uri);
             //if(!Files.exists(Paths.get(filePath))){
              //   throw new IOException("path not found");
@@ -201,7 +201,7 @@ public class StorageServer implements StorageServerInterface {
         try{
             if(!uri.startsWith(serverStorageRoot.toString()))
                 uri=serverStorageRoot.toString()+uri;
-            String dirPath=uri.substring(0,uri.lastIndexOf('\\'));
+            String dirPath=uri.substring(0,uri.lastIndexOf('/'));
             // !db.directories.any(uri);
             //if(!Files.exists(Paths.get(dirPath))){
             //    throw new IOException("path not found");

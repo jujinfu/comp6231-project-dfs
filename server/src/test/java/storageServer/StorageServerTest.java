@@ -25,7 +25,7 @@ public class StorageServerTest {
     public void testCreate_exists_deleteFile() throws Exception{
         if(storageServer==null)
             storageServer=new StorageServer();
-        String uri="\\test_file.txt";
+        String uri="/test_file.txt";
         assert (storageServer.createFile(uri));
         assert(storageServer.fileExists(uri));
         assert(storageServer.deleteFile(uri));
@@ -35,7 +35,7 @@ public class StorageServerTest {
     public void testCreate_exists_deleteDir() throws Exception {
         if(storageServer==null)
             storageServer=new StorageServer();
-        String uri="\\test_folder";
+        String uri="/test_folder";
         assert(storageServer.createDir(uri));
         assert(storageServer.dirExists(uri));
         assert(storageServer.deleteDir(uri));
@@ -46,9 +46,9 @@ public class StorageServerTest {
         if(storageServer==null)
             storageServer=new StorageServer();
 
-        String dirUri="\\test_folder";
-        String subDirUri="\\test_folder\\sub_folder";
-        String fileUri="\\test_folder\\test_file.txt";
+        String dirUri="/test_folder";
+        String subDirUri="/test_folder/sub_folder";
+        String fileUri="/test_folder/test_file.txt";
 
         assert(storageServer.createDir(dirUri));
         assert(storageServer.dirExists(dirUri));
@@ -72,7 +72,7 @@ public class StorageServerTest {
     public void testGetLastModifiedTime() throws Exception{
         if(storageServer==null)
             storageServer=new StorageServer();
-        String uri="\\test_folder";
+        String uri="/test_folder";
         assert(storageServer.createDir(uri));
         assert(storageServer.dirExists(uri));
         assert(storageServer.getLastModifiedTime(uri)!=null);
@@ -91,7 +91,7 @@ public class StorageServerTest {
         Files.write(Paths.get(localFile),content.getBytes("utf-8"));
 
         // upload part
-        String uri="\\test_file.txt";
+        String uri="/test_file.txt";
         assert(storageServer.uploadWithOverride(uri,new File(localFile)));
         assert(storageServer.deleteFile(uri));
         Files.delete(Paths.get(localFile));
@@ -101,7 +101,7 @@ public class StorageServerTest {
     public void testDownload() throws Exception{
         if(storageServer==null)
             storageServer=new StorageServer();
-        String uri="\\test_download.txt";
+        String uri="/test_download.txt";
         assert(storageServer.createFile(uri));
         File f=storageServer.download(uri);
         assert(f!=null);
