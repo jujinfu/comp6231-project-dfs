@@ -82,11 +82,11 @@ public class ServerController extends Commands{
         String uri=msg.split(" ")[1];
         AccessServer accessServer=new AccessServer();
         if(cmd.equals(create_file_cmd)){
-            accessServer.createFile(uri);
-            return "Create File: "+uri+"...Done";
+            if(accessServer.createFile(uri))
+                return "Create File: "+uri+"...Done";
         }else if(cmd.equals(delete_file_cmd)){
-            accessServer.deleteFile(uri);
-            return "Delete File: "+uri+"...Done";
+            if(accessServer.deleteFile(uri))
+                return "Delete File: "+uri+"...Done";
         }
         return null;
     }

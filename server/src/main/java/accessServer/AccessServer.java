@@ -1,33 +1,22 @@
 package accessServer;
 
-import accessServer.domain.EntityManagerHelper;
 import accessServer.domain.entities.FileDirInfo;
 import accessServer.domain.repositories.FileDirInfoRepository;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.dialect.FirebirdDialect;
 import storageServer.StorageServer;
 import storageServer.StorageServerInterface;
 
-import javax.persistence.Access;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
-public class AccessServer extends UnicastRemoteObject implements AccessServerInterface, StorageManagementInterface {
+public class AccessServer extends UnicastRemoteObject implements StorageManagementInterface, StorageServerInterface {
 
     private StorageServer storageServer = new StorageServer();
     //private EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
@@ -64,7 +53,7 @@ public class AccessServer extends UnicastRemoteObject implements AccessServerInt
 
 
     @Override
-    public boolean createFile(String uri) throws RemoteException {
+    public boolean createFile(String uri) throws Exception {
         /*
         TODO
          1. Check if file already exists in local db
@@ -77,23 +66,23 @@ public class AccessServer extends UnicastRemoteObject implements AccessServerInt
          8. Save DB records
          9. return result
         */
-
-//        FileDirInfo file = em
-//                .createNamedQuery("FileDirInfo.fileExists",FileDirInfo.class)
-//                .setParameter("name", getFileName(uri))
-//                .setParameter("parent",getFileParent(uri))
-//                .getSingleResult();
         List<FileDirInfo> file = FileDirInfoRepository.getFileByNameParentName(getFileName(uri), getFileParent(uri));
         if (file.size() == 0) {
             throw new RemoteException("File not found in db");
         }
 
+        try{
+            storageServer.createFile(uri);
+        }
+        catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
         return false;
     }
 
 
     @Override
-    public boolean fileExists(String uri) throws RemoteException {
+    public boolean fileExists(String uri) throws Exception {
         //Algorithm needed
 
 //        FileDirInfo file = em
@@ -108,43 +97,43 @@ public class AccessServer extends UnicastRemoteObject implements AccessServerInt
     }
 
     @Override
-    public boolean deleteFile(String uri) throws RemoteException {
+    public boolean deleteFile(String uri) throws Exception {
         return false;
     }
 
     @Override
-    public String getLastModifiedTime(String absoluteUri) throws RemoteException {
+    public String getLastModifiedTime(String absoluteUri) throws Exception {
         return null;
     }
 
     @Override
-    public boolean uploadWithOverride(String absoluteUri, File file) throws RemoteException {
+    public boolean uploadWithOverride(String absoluteUri, File file) throws Exception {
         return false;
     }
 
 
     @Override
-    public File download(String uri) throws RemoteException {
+    public File download(String uri) throws Exception {
         return null;
     }
 
     @Override
-    public String[] listFiles(String uri) throws RemoteException {
+    public String[] listFiles(String uri) throws Exception {
         return new String[0];
     }
 
     @Override
-    public String[] listSubDirs(String uri) throws RemoteException {
+    public String[] listSubDirs(String uri) throws Exception {
         return new String[0];
     }
 
     @Override
-    public boolean createDir(String uri) throws RemoteException {
+    public boolean createDir(String uri) throws Exception {
         return false;
     }
 
     @Override
-    public boolean deleteDir(String uri) throws RemoteException {
+    public boolean deleteDir(String uri) throws Exception {
         //get parent id by path
 
         //
@@ -153,7 +142,7 @@ public class AccessServer extends UnicastRemoteObject implements AccessServerInt
     }
 
     @Override
-    public boolean dirExists(String absoluteUri) throws RemoteException {
+    public boolean dirExists(String absoluteUri) throws Exception {
         return false;
     }
 

@@ -24,7 +24,7 @@ public class StorageServer implements StorageServerInterface {
     }
 
     @Override
-    public boolean createFile(String uri) throws RemoteException {
+    public boolean createFile(String uri) throws Exception {
         /*
         TODO
          1. check if file exists, and check if path not exists
@@ -52,13 +52,13 @@ public class StorageServer implements StorageServerInterface {
         }
     }
     @Override
-    public boolean fileExists(String uri) throws RemoteException{
+    public boolean fileExists(String uri) throws Exception{
         if(!uri.startsWith(serverStorageRoot.toString()))
             uri=serverStorageRoot.toString()+uri;
         return Files.exists(Paths.get(uri));
     }
     @Override
-    public boolean deleteFile(String uri) throws RemoteException {
+    public boolean deleteFile(String uri) throws Exception {
         /*
         TODO
          1. check if file exists
@@ -87,7 +87,7 @@ public class StorageServer implements StorageServerInterface {
     }
 
     @Override
-    public String getLastModifiedTime(String uri) throws RemoteException {
+    public String getLastModifiedTime(String uri) throws Exception {
         //TODO I dont know what we need to return here as metadata
         try {
             if (!uri.startsWith(serverStorageRoot.toString()))
@@ -106,7 +106,7 @@ public class StorageServer implements StorageServerInterface {
     }
 
     @Override
-    public boolean uploadWithOverride(String uri,File file) throws RemoteException{
+    public boolean uploadWithOverride(String uri,File file) throws Exception{
         //TODO
         try {
             if (!uri.startsWith(serverStorageRoot.toString()))
@@ -134,7 +134,7 @@ public class StorageServer implements StorageServerInterface {
         }
     }
     @Override
-    public File download(String uri) throws RemoteException {
+    public File download(String uri) throws Exception {
         //TODO
         // make a copy of the file and send to client
 
@@ -152,7 +152,7 @@ public class StorageServer implements StorageServerInterface {
     }
 
     @Override
-    public String[] listFiles(String uri) throws RemoteException {
+    public String[] listFiles(String uri) throws Exception {
         //TODO here we shall grab the directory content from database
 
         try {
@@ -169,7 +169,7 @@ public class StorageServer implements StorageServerInterface {
         }
     }
     @Override
-    public String[] listSubDirs(String uri) throws RemoteException {
+    public String[] listSubDirs(String uri) throws Exception {
         //TODO we should also grab list from DB
         try {
             if(!uri.startsWith(serverStorageRoot.toString()))
@@ -186,7 +186,7 @@ public class StorageServer implements StorageServerInterface {
     }
 
     @Override
-    public boolean createDir(String uri) throws RemoteException {
+    public boolean createDir(String uri) throws Exception {
         //TODO
         // 1. check if parent path exists
         // 2. If no, throw path not found, else, continue
@@ -215,7 +215,7 @@ public class StorageServer implements StorageServerInterface {
         }
     }
     @Override
-    public boolean dirExists(String uri) throws RemoteException{
+    public boolean dirExists(String uri) throws Exception{
         if(!uri.startsWith(serverStorageRoot.toString()))
             uri=serverStorageRoot.toString()+uri;
         return Files.exists(Paths.get(uri));
