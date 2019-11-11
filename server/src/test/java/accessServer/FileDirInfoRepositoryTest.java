@@ -19,7 +19,7 @@ public class FileDirInfoRepositoryTest {
     @Test
     public void testIsExists(){
         String uri="\\sub1\\sub2\\some.txt";
-        FileDirInfoRepository.isExists(uri);
+        FileDirInfoRepository.exists(uri);
 
     }
     //pay attentation to data, I didn't prepare data
@@ -53,7 +53,6 @@ public class FileDirInfoRepositoryTest {
         assertEquals(1, root.getId());
         assertEquals("\\", root.getName());
         assertNull(root.getParent());
-
     }
 
     @Test

@@ -59,7 +59,7 @@ public class FileDirInfoRepository {
 
     // to check if file exists in db
     //"\test_dir\test.txt"
-    public static boolean isExists(String uri){
+    public static boolean exists(String uri){
         if(!uri.startsWith("\\"))
             return false;
         String[] list=uri.split("\\\\");
@@ -75,13 +75,23 @@ public class FileDirInfoRepository {
 
     private static FileDirInfo getFileInDir(String fileName,String parentName){
         EntityManager em = factory.createEntityManager();
-        FileDirInfo files = em
-                .createNamedQuery("FileDirInfo.fileExists", FileDirInfo.class)
-                .setParameter("name", fileName)
-                .setParameter("parent",parentName)
-                .getSingleResult();
-        em.close();
-        return files;
+        try {
+
+            FileDirInfo file = em
+                    .createNamedQuery("FileDirInfo.fileExists", FileDirInfo.class)
+                    .setParameter("name", fileName)
+                    .setParameter("parent", parentName)
+                    .getSingleResult();
+            em.close();
+            return file;
+        }catch (Exception e){
+
+            if(e.getMessage().equals("No entity found for query"))
+                return null;
+        }
+        if(em.isOpen())
+            em.close();
+        return null;
     }
 
 

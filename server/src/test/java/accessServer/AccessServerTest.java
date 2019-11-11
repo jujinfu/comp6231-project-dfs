@@ -15,8 +15,12 @@ public class AccessServerTest {
     void fileExistsTest() throws Exception{
         if(accessServer==null)
             accessServer=new AccessServer();
-        String uri="\\as_exist_file.txt";
+        String uri="\\sub1\\sub2\\some.txt";
         assert(accessServer.fileExists(uri));
+        System.out.println("testing random file");
+        uri="\\random_file.txt";
+        assert(!accessServer.fileExists(uri));
+
     }
     @Test
     void createFileTest() throws Exception{

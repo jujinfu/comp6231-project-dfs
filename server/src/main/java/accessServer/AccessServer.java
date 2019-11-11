@@ -67,7 +67,7 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
          9. return result
         */
 
-        if (FileDirInfoRepository.isExists(uri)) {
+        if (FileDirInfoRepository.exists(uri)) {
             throw new RemoteException("File exists in db");
         }
         try{
@@ -84,17 +84,7 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
 
     @Override
     public boolean fileExists(String uri) throws Exception {
-        //Algorithm needed
-
-//        FileDirInfo file = em
-//                .createNamedQuery("FileDirInfo.fileExists",FileDirInfo.class)
-//                .setParameter("name", getFileName(uri))
-//                .setParameter("parent",getFileParent(uri))
-//                .getSingleResult();
-//
-//        return file==null;
-        List<FileDirInfo> file = FileDirInfoRepository.getFileByNameParentName(getFileName(uri), getFileParent(uri));
-        return file == null;
+        return FileDirInfoRepository.exists(uri);
     }
 
     @Override
