@@ -22,7 +22,7 @@ public class StorageServerTest {
     }
 
     @Test
-    public void create_exists_deleteFileTest() throws Exception{
+    public void testCreate_exists_deleteFile() throws Exception{
         if(storageServer==null)
             storageServer=new StorageServer();
         String uri="/test_file.txt";
@@ -32,7 +32,7 @@ public class StorageServerTest {
     }
 
     @Test
-    public void create_exists_deleteDirTest() throws Exception {
+    public void testCreate_exists_deleteDir() throws Exception {
         if(storageServer==null)
             storageServer=new StorageServer();
         String uri="/test_folder";
@@ -42,7 +42,7 @@ public class StorageServerTest {
     }
 
     @Test
-    public void listDirTest()throws Exception{
+    public void testListDir()throws Exception{
         if(storageServer==null)
             storageServer=new StorageServer();
 
@@ -81,7 +81,7 @@ public class StorageServerTest {
     }
 
     @Test
-    public void uploadTest() throws Exception{
+    public void testUpload() throws Exception{
         if(storageServer==null)
             storageServer=new StorageServer();
         String localFile="test_upload.txt";
@@ -97,7 +97,7 @@ public class StorageServerTest {
     }
 
     @Test
-    public void downloadTest() throws Exception{
+    public void testDownload() throws Exception{
         if(storageServer==null)
             storageServer=new StorageServer();
         String uri="/test_download.txt";

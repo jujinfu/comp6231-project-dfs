@@ -14,7 +14,7 @@ public class AccessServerTest {
     }
 
     @Test
-    public void fileExistsTest() {
+    public void testFileExists() {
         try {if(accessServer==null) {
 
                 accessServer=new AccessServer();
@@ -29,16 +29,12 @@ public class AccessServerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
     @Test
-    public void createFileTest(){
+    public void testCreateFile(){
         try {
             if(accessServer==null) {
-
-                    accessServer=new AccessServer();
-
+                accessServer=new AccessServer();
             }
             String uri="\\as_create_file.txt";
             assert(accessServer.createFile(uri));

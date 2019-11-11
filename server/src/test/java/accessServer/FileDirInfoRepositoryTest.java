@@ -17,7 +17,7 @@ public class FileDirInfoRepositoryTest {
 
 
     @Test
-    public void testIsExists(){
+    public void testExists(){
         String uri="\\sub1\\sub2\\some.txt";
         FileDirInfoRepository.exists(uri);
 
