@@ -2,6 +2,8 @@ package accessServer;
 
 import accessServer.domain.EntityManagerHelper;
 import accessServer.domain.entities.FileDirInfo;
+import accessServer.domain.repositories.FileDirInfoRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.dialect.FirebirdDialect;
 import storageServer.StorageServer;
 import storageServer.StorageServerInterface;
@@ -24,10 +26,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AccessServer extends UnicastRemoteObject implements AccessServerInterface,StorageManagementInterface {
 
-    private StorageServer storageServer=new StorageServer();
-    private EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
+public class AccessServer extends UnicastRemoteObject implements AccessServerInterface, StorageManagementInterface {
+
+    private StorageServer storageServer = new StorageServer();
+    //private EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
+    private FileDirInfoRepository fileDirInfoRepository;
 
     private ServerSocket ss;
     private ArrayList<Socket> clients;
@@ -37,69 +41,70 @@ public class AccessServer extends UnicastRemoteObject implements AccessServerInt
     }
 
     private String getServerConnection(String clientAddress) {
-        if(clientAddress.contains("location1")){
+        if (clientAddress.contains("location1")) {
             return "server1";
-        }else if(clientAddress.contains("location2")){
+        } else if (clientAddress.contains("location2")) {
             return "server2";
         }
         return "server1";
     }
 
-    private String getFileName(String uri){
-        return uri.substring(uri.lastIndexOf("\\")+1,uri.length());
+    private String getFileName(String uri) {
+        return uri.substring(uri.lastIndexOf("\\") + 1, uri.length());
     }
 
-    private String getFileParent(String uri){
-        return uri.substring(0,uri.lastIndexOf("\\"));
-    }
-    private FileDirInfo getRootDir(){
-        FileDirInfo file=em.createNamedQuery("FileDirInfo.getRootDir", FileDirInfo.class)
-                .getSingleResult();
-        return file;
+    private String getUpperParent(String uri) {
+        String parentAbs = getFileParent(uri);
+        return StringUtils.isEmpty(parentAbs) ? "\\" : uri.substring(parentAbs.lastIndexOf("\\") + 1, parentAbs.length());
     }
 
-    private List<FileDirInfo> getChildren(FileDirInfo dir){
-        List<FileDirInfo> files=em.createNamedQuery("FileDirInfo.getChildren", FileDirInfo.class)
-                .setParameter("parent",dir).getResultList();
-
-        return files;
+    private String getFileParent(String uri) {
+        return uri.substring(0, uri.lastIndexOf("\\"));
     }
+
 
     @Override
     public boolean createFile(String uri) throws RemoteException {
         /*
         TODO
          1. Check if file already exists in local db
-         2. if yes, throw file already exists, else continue
-         3. check if parent dir exists
-         4. if no, throw path not found, else continue
-         5. run create from storage server
-         6. Save DB records
-         7. return result
+         2. if yes, check if parent are the same
+         3. If parent are not the same, check if parent exists, if yes, create file, else throw path not found exception
+         4. step 2, If parent are not the same, keep going to check if whole path of parent are exists
+         5. If all dirs in path are exists, create
+         6. Otherwise, throw path not found exception
+         7. to create, run create from storage server
+         8. Save DB records
+         9. return result
         */
 
-        FileDirInfo file = em
-                .createNamedQuery("FileDirInfo.fileExists",FileDirInfo.class)
-                .setParameter("name", getFileName(uri))
-                .setParameter("parent",getFileParent(uri))
-                .getSingleResult();
-        if(file==null)
-        {
+//        FileDirInfo file = em
+//                .createNamedQuery("FileDirInfo.fileExists",FileDirInfo.class)
+//                .setParameter("name", getFileName(uri))
+//                .setParameter("parent",getFileParent(uri))
+//                .getSingleResult();
+        List<FileDirInfo> file = FileDirInfoRepository.getFileByNameParentName(getFileName(uri), getFileParent(uri));
+        if (file.size() == 0) {
             throw new RemoteException("File not found in db");
         }
 
         return false;
     }
 
+
     @Override
     public boolean fileExists(String uri) throws RemoteException {
-        FileDirInfo file = em
-                .createNamedQuery("FileDirInfo.fileExists",FileDirInfo.class)
-                .setParameter("name", getFileName(uri))
-                .setParameter("parent",getFileParent(uri))
-                .getSingleResult();
+        //Algorithm needed
 
-        return file==null;
+//        FileDirInfo file = em
+//                .createNamedQuery("FileDirInfo.fileExists",FileDirInfo.class)
+//                .setParameter("name", getFileName(uri))
+//                .setParameter("parent",getFileParent(uri))
+//                .getSingleResult();
+//
+//        return file==null;
+        List<FileDirInfo> file = FileDirInfoRepository.getFileByNameParentName(getFileName(uri), getFileParent(uri));
+        return file == null;
     }
 
     @Override
@@ -140,6 +145,10 @@ public class AccessServer extends UnicastRemoteObject implements AccessServerInt
 
     @Override
     public boolean deleteDir(String uri) throws RemoteException {
+        //get parent id by path
+
+        //
+
         return false;
     }
 

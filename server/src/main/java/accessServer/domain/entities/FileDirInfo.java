@@ -19,17 +19,19 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@ToString(exclude = "parent")
+//@ToString(exclude = "parent")
 @Entity(name="file_dir_info")
 @NamedQueries({
         @NamedQuery(name = "FileDirInfo.findById",
                 query = "SELECT f FROM file_dir_info f where f.id = :id"),
         @NamedQuery(name="FileDirInfo.fileExists",
-            query="select file_dir_info from file_dir_info where name=:name and parent=:parent"),
+            query="select f from file_dir_info f where f.name=:name and f.parent.name=:parent"),
         @NamedQuery(name="FileDirInfo.getChildren",
-                query="select file_dir_info from file_dir_info where parent=:parent"),
-        @NamedQuery(name="FileDirInfo.getRootDir",
-                query="select file_dir_info from file_dir_info where parent=1"),
+                query="select f from file_dir_info f where f.parent.id=:parent"),
+        @NamedQuery(name="FileDirInfo.getRoot",
+                query="select f from file_dir_info f where f.id=1"),
+        @NamedQuery(name="FileDirInfo.getRootDirs",
+                query="select f from file_dir_info f where f.parent.id=1"),
 
 })
 public class FileDirInfo {
@@ -55,12 +57,12 @@ public class FileDirInfo {
     private boolean isDir = false;
 
     @Column(name="status", nullable = false)
-    private String status;
+    private String status = "Ready";
 
     @Column(name="status_by_user")
     private String statusByUser;
 
-    @ManyToOne(cascade={CascadeType.ALL}, fetch = FetchType.LAZY)
+    @ManyToOne(cascade={CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinColumn(name="parent")
     private FileDirInfo parent;
 
