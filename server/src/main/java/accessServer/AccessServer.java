@@ -78,7 +78,7 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
         catch(Exception e){
             throw new Exception(e.getMessage());
         }
-        return false;
+        return true;
     }
 
 
