@@ -117,9 +117,9 @@ public class StorageServer implements StorageServerInterface {
 
             String filePath=uri.substring(0,uri.lastIndexOf('\\'));
             // !db.directories.any(uri);
-            if(!Files.exists(Paths.get(filePath))){
-                throw new IOException("path not found");
-            }
+            //if(!Files.exists(Paths.get(filePath))){
+             //   throw new IOException("path not found");
+            //}
 
             Files.deleteIfExists(Paths.get(uri));
             Files.createFile(Paths.get(uri));
@@ -203,9 +203,9 @@ public class StorageServer implements StorageServerInterface {
                 uri=serverStorageRoot.toString()+uri;
             String dirPath=uri.substring(0,uri.lastIndexOf('\\'));
             // !db.directories.any(uri);
-            if(!Files.exists(Paths.get(dirPath))){
-                throw new IOException("path not found");
-            }
+            //if(!Files.exists(Paths.get(dirPath))){
+            //    throw new IOException("path not found");
+            //}
             // db.files.any(uri);
             if(Files.exists(Paths.get(uri))){
                 throw new IOException("folder already exists");
