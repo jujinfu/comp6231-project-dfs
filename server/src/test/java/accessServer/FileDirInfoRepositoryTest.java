@@ -3,8 +3,10 @@ package accessServer;
 import accessServer.domain.EntityManagerHelper;
 import accessServer.domain.entities.FileDirInfo;
 import accessServer.domain.repositories.FileDirInfoRepository;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -17,11 +19,50 @@ public class FileDirInfoRepositoryTest {
 
 
     @Test
+    @SneakyThrows
     public void testExists(){
         String uri="\\sub1\\sub2\\some.txt";
-        FileDirInfoRepository.exists(uri);
-
+        FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
+        boolean actual = FileDirInfoRepository.exists(actualFile);
+        assertTrue(actual);
     }
+
+    @Test
+    @SneakyThrows
+    public void testExists2(){
+        String uri="\\underRoot.txt";
+        FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
+        boolean actual = FileDirInfoRepository.exists(actualFile);
+        assertTrue(actual);
+    }
+
+    @Test
+    @SneakyThrows
+    public void testExists4(){
+        String uri="\\";
+        FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
+        boolean actual = FileDirInfoRepository.exists(actualFile);
+        assertTrue(actual);
+    }
+
+    @Test
+    @SneakyThrows
+    public void testExists5(){
+        String uri="\\sub1\\some.txt";
+        FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
+        boolean actual = FileDirInfoRepository.exists(actualFile);
+        assertFalse(actual);
+    }
+
+    @Test
+    @SneakyThrows
+    public void testExists3(){
+        String uri="\\somthing.txt";
+        FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
+        boolean actual = FileDirInfoRepository.exists(actualFile);
+        assertFalse(actual);
+    }
+
     //pay attentation to data, I didn't prepare data
     @Test
     public void testGetFileById() {
@@ -193,6 +234,40 @@ public class FileDirInfoRepositoryTest {
         assertEquals(newStatusByUser, actualUpdatedFile.getStatusByUser());
 
 
+    }
+
+    @Test
+    @SneakyThrows
+    public void testCreateNewFileByUri(){
+        String name = UUID.randomUUID().toString();
+        String uri = "\\" + name;
+
+        FileDirInfo file = FileDirInfoRepository.createNewFile(uri);
+
+        List<FileDirInfo> actualResult = getByName(name);
+        deleteByName(name);
+
+        assertEquals( 1, actualResult.size());
+        FileDirInfo actualFile = actualResult.get(0);
+        assertEquals(name, actualFile.getName());
+    }
+
+    private List<FileDirInfo> getByName(String name){
+        EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
+        Query q2 = em.createQuery("select f from file_dir_info f where f.name=:name")
+                .setParameter("name", name);
+        List<FileDirInfo> actualResult = q2.getResultList();
+        em.close();
+        return actualResult;
+    }
+
+    private void deleteByName(String name){
+        EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
+        Query q = em.createNativeQuery("delete from file_dir_info f where f.name ='" + name + "'");
+        em.getTransaction().begin();
+        q.executeUpdate();
+        em.getTransaction().commit();
+        em.close();
     }
 
     private Date getDatBefore(int days) {

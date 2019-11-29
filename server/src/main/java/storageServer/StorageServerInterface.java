@@ -1,5 +1,7 @@
 package storageServer;
 
+import accessServer.domain.entities.FileDirInfo;
+
 import java.io.File;
 import java.io.FileReader;
 import java.rmi.Remote;

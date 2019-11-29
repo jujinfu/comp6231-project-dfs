@@ -32,6 +32,8 @@ import java.util.Set;
                 query="select f from file_dir_info f where f.id=1"),
         @NamedQuery(name="FileDirInfo.getRootDirs",
                 query="select f from file_dir_info f where f.parent.id=1"),
+        @NamedQuery(name="FileDirInfo.findByName",
+                query="select f from file_dir_info f where f.name=:name"),
 
 })
 public class FileDirInfo {
