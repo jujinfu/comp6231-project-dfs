@@ -23,13 +23,14 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AccessServerTest {
 
     private static AccessServer accessServer;
-    private static String tempParentName;
-    private static String tempFileName;
-    private static String tempFileName2;
+    private static String tempParentName = "sub1";
+    private static String tempFileName = "sub2";
+    private static String tempFileName2 = "sub3";
 
-//    public AccessServerTest() throws Exception{
-//        accessServer=new AccessServer();
-//    }
+    public AccessServerTest() throws Exception{
+        System.out.println("----------------constructor--------------------");
+        accessServer=new AccessServer();
+    }
 
     @BeforeAll
     public static void beforeClass() throws Exception{
@@ -89,7 +90,9 @@ public class AccessServerTest {
 
                 accessServer = new AccessServer();
                 String uri = "/" + tempParentName + "/" + tempFileName + "/" + tempFileName2;
-                assert (accessServer.fileExists(uri));
+                boolean result = accessServer.fileExists(uri);
+                afterEach();
+                assert (result);
                 System.out.println("testing random file");
                 uri = "/random_file.txt";
                 assert (!accessServer.fileExists(uri));
@@ -104,6 +107,7 @@ public class AccessServerTest {
         assert (accessServer.createFile(uri));
         assert (accessServer.fileExists(uri));
         assert (accessServer.deleteFile(uri));
+        afterEach();
     }
 
     @Test
@@ -113,6 +117,7 @@ public class AccessServerTest {
         assert (accessServer.createDir(uri));
         assert (accessServer.dirExists(uri));
         assert (accessServer.deleteDir(uri));
+        afterEach();
     }
 
     @Test
@@ -127,6 +132,7 @@ public class AccessServerTest {
         assertThrows(RemoteException.class, () ->
                         accessServer.deleteDir(uri),
                 "Directory is not empty");
+        afterEach();
     }
 
     @Test
@@ -141,6 +147,7 @@ public class AccessServerTest {
         assertThrows(RemoteException.class, () ->
                         accessServer.deleteDir(uri),
                 "Directory not exists in db");
+        afterEach();
     }
 
     @Test
@@ -152,6 +159,7 @@ public class AccessServerTest {
         assertThrows(RemoteException.class, () ->
                         accessServer.deleteDir(uri),
                 "Directory not exists in db");
+        afterEach();
     }
 
     @Test
@@ -165,6 +173,7 @@ public class AccessServerTest {
         assertThrows(RemoteException.class, () ->
                         accessServer.createFile(uri),
                 "File exists in db");
+        afterEach();
     }
 
     @Test
@@ -175,6 +184,7 @@ public class AccessServerTest {
         assertThrows(RemoteException.class, () ->
                         accessServer.createFile(uri),
                 "parent not exist in db, uri: " + uri);
+        afterEach();
     }
 
     @Test
@@ -189,7 +199,7 @@ public class AccessServerTest {
         insertFileByName(tempFileName2, true, pid, fId2);
 
         String[] files = accessServer.listFiles(uri);
-
+        afterEach();
         assertNotNull(files);
         assertEquals(1, files.length);
         assertEquals(tempFileName, files[0]);
@@ -205,7 +215,7 @@ public class AccessServerTest {
         insertFileByName(tempFileName2, true, pid, fId2);
 
         String[] files = accessServer.listFiles(uri);
-
+        afterEach();
         assertNotNull(files);
         assertEquals(0, files.length);
     }
@@ -223,7 +233,7 @@ public class AccessServerTest {
         insertFileByName(tempFileName2, true, pid, fId2);
 
         String[] files = accessServer.listSubDirs(uri);
-
+        afterEach();
         assertNotNull(files);
         assertEquals(1, files.length);
         assertEquals(tempFileName2, files[0]);
@@ -241,7 +251,7 @@ public class AccessServerTest {
         insertFileByName(tempFileName2, false, pid, fId2);
 
         String[] files = accessServer.listSubDirs(uri);
-
+        afterEach();
         assertNotNull(files);
         assertEquals(0, files.length);
     }
