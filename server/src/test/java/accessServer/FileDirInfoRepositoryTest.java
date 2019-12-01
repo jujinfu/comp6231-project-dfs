@@ -30,6 +30,7 @@ public class FileDirInfoRepositoryTest {
         deleteByName(tempFileName);
         deleteByName(tempParentName);
     }
+
 //
 //    @AfterAll
 //    public static void afterAll(){
@@ -272,7 +273,7 @@ public class FileDirInfoRepositoryTest {
         Integer pId = 12345;
         Integer fId = 12346;
         insertFileByName(tempParentName, true, 1,pId);
-        insertFileByName(tempParentName, true, pId, fId);
+        insertFileByName(tempFileName, true, pId, fId);
 
         String uri = "/" + tempParentName + "/" + tempFileName;
 
