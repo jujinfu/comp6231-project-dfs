@@ -1,8 +1,8 @@
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             version="2.1"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
-             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
-             version="2.1">
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 
     <persistence-unit name="MATADATADB" transaction-type="RESOURCE_LOCAL">
 
@@ -22,7 +22,6 @@
             <!--fill password in the value attr-->
             <property name="javax.persistence.jdbc.password" value="Comp6231." />
             <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.hbm2ddl.auto" value="update" />
 
         </properties>
 

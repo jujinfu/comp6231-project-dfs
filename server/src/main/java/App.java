@@ -17,6 +17,7 @@ import java.util.concurrent.CompletableFuture;
 public class App  {
 
     public static void main(String args[]) throws Exception {
+        EntityManagerHelper.getEntityManagerFactory();
 
         ServerController sc=new ServerController();
         sc.listenConnection(9999);
