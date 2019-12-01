@@ -64,7 +64,6 @@ public class ServerController extends Commands{
     }
 
     public String processMessage(Socket client) throws IOException {
-
         BufferedReader in=new BufferedReader(new InputStreamReader(client.getInputStream()));
         String msg=in.readLine();
 

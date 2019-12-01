@@ -176,7 +176,8 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
 
     @Override
     public String syncCommand(String command) throws IOException {
-
+        if(command.contains(" SYNC"))
+            return "";
         //this part is for demo only. will need to add server reg in database in future
         String server1_internal_addr="172.31.10.138";
         String server1_public_addr="34.202.163.106";
@@ -193,7 +194,7 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
             clientSocket=new Socket(server1_public_addr,serverPort);
         }
         PrintWriter printWriter=new PrintWriter(clientSocket.getOutputStream(), true);
-        printWriter.println(command);
+        printWriter.println(command+" SYNC");
         String resp = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())).readLine();
         clientSocket.close();
         return "SYNC: "+resp;

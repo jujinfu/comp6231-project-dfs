@@ -70,11 +70,25 @@ public class App extends Commands{
     public static void help(){
         System.out.println("command example:");
         System.out.println("help # show instructions");
-        System.out.println(create_file_cmd+" "+"/test.txt # create a file named test.txt at root location");
-        System.out.println(create_file_cmd+" "+"/testdir/test.txt # create a file named test.txt under testdir folder");
+
+        System.out.println(create_file_cmd+" "+"/test.txt");
+        System.out.println(create_dir_cmd+" "+"/testdir");
+
+        System.out.println(list_files_cmd+" "+"/");
+        System.out.println(list_dir_cmd+" "+"/");
+
+        System.out.println(exists_file_cmd+" "+"/test.txt");
+        System.out.println(exists_dir_cmd+" "+"/testdir");
+
+        System.out.println(delete_file_cmd+" "+"/test.txt");
+        System.out.println(delete_dir_cmd+" "+"/testdir");
+
         System.out.println();
+        System.out.println("available commands");
         System.out.println(create_file_cmd+"\n"+delete_file_cmd);
         System.out.println(create_dir_cmd+"\n"+delete_dir_cmd);
+        System.out.println(list_files_cmd+"\n"+list_dir_cmd);
+        System.out.println(exists_file_cmd+"\n"+exists_dir_cmd);
 
     }
 
