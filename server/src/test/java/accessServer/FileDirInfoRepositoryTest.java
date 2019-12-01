@@ -4,6 +4,7 @@ import accessServer.domain.EntityManagerHelper;
 import accessServer.domain.entities.FileDirInfo;
 import accessServer.domain.repositories.FileDirInfoRepository;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.junit.platform.commons.util.StringUtils;
 
@@ -14,78 +15,59 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@Slf4j
 public class FileDirInfoRepositoryTest {
 
     private static String tempParentName = "sub1_repo_test";
     private static String tempFileName = "sub2_repo_test";
+    private static String tempFileName2 = "sub3_repo_test";
     private static String SLASH = "/";
 
-//    @BeforeEach
-//    public void beforeEach(){file already exists
-//        System.out.println("----------------beforeEach--------------------");
-//        tempFileName = "sub1";
-//        tempParentName = "sub2";
-//    }
-
-    //@AfterEach
+    @AfterEach
     public void afterEach(){
         System.out.println("----------------afterEach--------------------");
+        deleteByName(tempFileName2);
+        deleteByName(tempFileName);
+        deleteByName(tempParentName);
+    }
+
+    @AfterAll
+    public static void afterAll(){
+        System.out.println("----------------afterAll--------------------");
+        deleteByName(tempFileName2);
         deleteByName(tempFileName);
         deleteByName(tempParentName);
     }
 
     @Test
-    public void testExists1(){
+    public void testExists1() {
         afterEach();
-        try {
-            //file to be tested
-            String uri = "/underroot.txt";
-            //make sure new file does not exist
-            assertTrue(FileDirInfoRepository.getFile(uri) == null);
-            //create file
-            FileDirInfo file=FileDirInfoRepository.createNewFile(uri);
-            //make sure create did return a file
-            assertNotEquals(null,file);
-            //make sure exists function returns right value
-            assertTrue(FileDirInfoRepository.exists(file));
-            //cleanup
-            assertTrue(FileDirInfoRepository.deleteFileById(file.getId()));
+        //file to be tested
+        String uri = "/underroot.txt";
+        //make sure new file does not exist
+        assertTrue(FileDirInfoRepository.getFile(uri) == null);
+        //create file
+        FileDirInfo file = FileDirInfoRepository.createNewFile(uri);
+        //make sure create did return a file
+        assertNotEquals(null, file);
+        //make sure exists function returns right value
+        assertTrue(FileDirInfoRepository.exists(file));
+        //cleanup
+        assertTrue(FileDirInfoRepository.deleteFileById(file.getId()));
 
-        }catch(Exception e){
-            e.printStackTrace();
-        }finally {
-            afterEach();
-        }
+        afterEach();
     }
 
     @Test
-    public void testExists2(){
+    public void testExists2() {
         afterEach();
-        try {
-            //file to be tested
-            String uri = "/subdir1/subdir2/underroot.txt";
-            //make sure new file does not exist
-            assertTrue(FileDirInfoRepository.getFile(uri) == null);
 
-            /*//create file
-            FileDirInfo file=FileDirInfoRepository.createNewFile(uri);
-            //make sure create did return a file
-            assertNotEquals(null,file);
-            //make sure exists function returns right value
-            assertTrue(FileDirInfoRepository.exists(file));
-            //cleanup
-            assertTrue(FileDirInfoRepository.deleteFileById(file.getId()));
-            */
-
-
-        }catch(Exception e){
-            e.printStackTrace();
-
-        }finally {
-            afterEach();
-        }
+        //file to be tested
+        String uri = "/subdir1/subdir2/underroot.txt";
+        //make sure new file does not exist
+        assertNull(FileDirInfoRepository.getFile(uri));
     }
+
     @Test
     public void testExists3(){
         afterEach();
@@ -126,6 +108,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testGetChildernById() {
+        log.info("Running repo testGetChildernById");
         afterEach();
         Integer parentId = 12345;
         insertFileByName(tempParentName, true, 1, parentId);
@@ -133,7 +116,7 @@ public class FileDirInfoRepositoryTest {
         Integer childId = 13345;
         insertFileByName(tempFileName, false, parentId, childId);
         Integer childId2 = 13346;
-        insertFileByName(tempFileName, false, parentId, childId2);
+        insertFileByName(tempFileName2, false, parentId, childId2);
 
         List<FileDirInfo> files = FileDirInfoRepository.getChildren(dir);
 
@@ -169,9 +152,10 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testGetRootDirs() {
+        log.info("Running repo testGetRootDirs");
         afterEach();
-        insertFileByName(tempParentName);
-        insertFileByName(tempFileName);
+        insertFileByName(tempParentName, true, 1, 12345);
+        insertFileByName(tempFileName, true, 1, 12346);
 
         List<FileDirInfo> root = FileDirInfoRepository.getRootDirAndFiles();
 
@@ -182,6 +166,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testCreateDir() {
+        log.info("Running repo testCreateDir");
         afterEach();
         Integer pid = 12345;
         insertFileByName(tempParentName, true, 1, pid);
@@ -201,29 +186,19 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testDeleteFile() {
+        log.info("Running repo testDeleteFile");
         afterEach();
         FileDirInfo p = FileDirInfoRepository.getRoot();
         Integer id = 12345;
         String fileName = tempFileName;
         //String qs = "insert into file_dir_info (id, name,is_dir,status_by_user,parent) values (" + id + ",'" + fileName + "',true,'test',1);";
 
-        EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
-        em.getTransaction().begin();
-        Query q = em.createNativeQuery("insert into file_dir_info (id, name,is_dir,status_by_user,parent) " +
-                "VALUES (:id, :name, :is_dir, :status_by_user, :parent)")
-                .setParameter("id", id)
-                .setParameter("name", fileName)
-                .setParameter("is_dir", true)
-                .setParameter("status_by_user", "test")
-                .setParameter("parent", 1);
-        q.executeUpdate();
-        em.getTransaction().commit();
+        insertFileByName(fileName, true, 1, id);
 
         boolean isDeleted = FileDirInfoRepository.deleteFileById(id);
         assertTrue(isDeleted);
-        em.getTransaction().begin();
-        Query q2 = em.createQuery("select f from file_dir_info f where f.id=:id").setParameter("id", id);
-        List<FileDirInfo> actualDir = q2.getResultList();
+
+        List<FileDirInfo> actualDir = getByName(fileName);
 
         assertEquals(0, actualDir.size());
 
@@ -231,6 +206,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testCreateByNativeQuery() {
+        log.info("Running repo testCreateByNativeQuery");
         afterEach();
         String name = tempFileName;
         Integer pId = 1;
@@ -239,38 +215,27 @@ public class FileDirInfoRepositoryTest {
         file.setName(name);
         file.setStatusByUser("test");
 
-
         FileDirInfoRepository.createNewDir(file, pId);
 
-        EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
-        Query q2 = em.createQuery("select f from file_dir_info f where f.name=:name").setParameter("name", name);
-        List<FileDirInfo> actualResult = q2.getResultList();
-
+        List<FileDirInfo> actualResult = getByName(name);
         assertNotNull(actualResult);
         assertTrue(actualResult.size() == 1);
         FileDirInfo actualFile = actualResult.get(0);
-
         assertEquals(name, actualFile.getName());
         assertEquals(pId, actualFile.getParent().getId());
         assertTrue(actualFile.isDir());
 
-        Query q = em.createNativeQuery("delete from file_dir_info f where f.name ='" + name + "'");
-        em.getTransaction().begin();
-        q.executeUpdate();
-        em.getTransaction().commit();
-        em.close();
     }
 
     @Test
     public void testUpdate() {
+        log.info("Running repo testUpdate");
         afterEach();
-        FileDirInfo p = FileDirInfoRepository.getRoot();
         Integer id = 12345;
         String fileName = tempFileName;
         Date oldLastModifiedDate = getDatBefore(7);
-        //String qs = "insert into file_dir_info (id, name,is_dir,status_by_user,parent) values (" + id + ",'" + fileName + "',true,'test',1);";
 
-        insertFileByNameAndId(fileName, id);
+        insertFileByName(fileName,true, 1, id);
 
         String newStatusByUser = "test1234";
         FileDirInfo toBeUpdated = FileDirInfo.builder().id(id).statusByUser(newStatusByUser).build();
@@ -287,15 +252,14 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testCreateNewFileByUri(){
+        log.info("Running repo testCreateNewFileByUri");
         afterEach();
         String name = tempFileName;
         String uri = "/" + name;
 
-        FileDirInfo file = FileDirInfoRepository.createNewFile(uri);
+        FileDirInfoRepository.createNewFile(uri);
 
         List<FileDirInfo> actualResult = getByName(name);
-        deleteByName(name);
-
         assertEquals( 1, actualResult.size());
         FileDirInfo actualFile = actualResult.get(0);
         assertEquals(name, actualFile.getName());
@@ -303,17 +267,13 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testCreateNewFileByNestedUri(){
+        log.info("Running repo testCreateNewFileByNestedUri");
         afterEach();
-        EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
-        em.getTransaction().begin();
-        Query q = em.createNativeQuery("insert into file_dir_info ( name,is_dir,status_by_user,parent) " +
-                "VALUES (:name, :is_dir, :status_by_user, :parent)")
-                .setParameter("name", tempParentName)
-                .setParameter("is_dir", true)
-                .setParameter("status_by_user", "test")
-                .setParameter("parent", 1);
-        q.executeUpdate();
-        em.getTransaction().commit();
+        Integer pId = 12345;
+        Integer fId = 12346;
+        insertFileByName(tempParentName, true, 1,pId);
+        insertFileByName(tempParentName, true, pId, fId);
+
         String uri = "/" + tempParentName + "/" + tempFileName;
 
         FileDirInfo file = FileDirInfoRepository.createNewFile(uri);
@@ -323,6 +283,9 @@ public class FileDirInfoRepositoryTest {
         assertEquals( 1, actualResult.size());
         FileDirInfo actualFile = actualResult.get(0);
         assertEquals(tempFileName, actualFile.getName());
+
+        assertEquals(tempFileName, file.getName());
+        assertEquals(tempParentName, file.getParent().getName());
     }
 
     private List<FileDirInfo> getByName(String name){
@@ -334,26 +297,13 @@ public class FileDirInfoRepositoryTest {
         return actualResult;
     }
 
-    private void deleteByName(String name){
+    private static void deleteByName(String name){
         EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
         Query q = em.createNativeQuery("delete from file_dir_info f where f.name ='" + name + "'");
         em.getTransaction().begin();
         q.executeUpdate();
         em.getTransaction().commit();
         em.close();
-    }
-
-    private void insertFileByName(String name){
-        EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
-        em.getTransaction().begin();
-        Query q = em.createNativeQuery("insert into file_dir_info (name,is_dir,status_by_user,parent) " +
-                "VALUES (:name, :is_dir, :status_by_user, :parent)")
-                .setParameter("name", name)
-                .setParameter("is_dir", false)
-                .setParameter("status_by_user", "test")
-                .setParameter("parent", 1);
-        q.executeUpdate();
-        em.getTransaction().commit();
     }
 
     private void insertFileByName(String name, boolean isDir, Integer parent, Integer id){
@@ -366,20 +316,6 @@ public class FileDirInfoRepositoryTest {
                 .setParameter("is_dir", isDir)
                 .setParameter("status_by_user", "test")
                 .setParameter("parent", parent);
-        q.executeUpdate();
-        em.getTransaction().commit();
-    }
-
-    private void insertFileByNameAndId(String name, Integer id){
-        EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
-        em.getTransaction().begin();
-        Query q = em.createNativeQuery("insert into file_dir_info (id, name,is_dir,status_by_user,parent) " +
-                "VALUES (:id, :name, :is_dir, :status_by_user, :parent)")
-                .setParameter("id", id)
-                .setParameter("name", name)
-                .setParameter("is_dir", false)
-                .setParameter("status_by_user", "test")
-                .setParameter("parent", 1);
         q.executeUpdate();
         em.getTransaction().commit();
     }

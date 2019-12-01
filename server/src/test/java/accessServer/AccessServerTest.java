@@ -2,21 +2,15 @@ package accessServer;
 
 
 import accessServer.domain.EntityManagerHelper;
-import accessServer.domain.repositories.FileDirInfoRepository;
 import lombok.SneakyThrows;
-import org.hibernate.type.descriptor.java.UUIDTypeDescriptor;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
+
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.rmi.RemoteException;
 import java.util.UUID;
-import java.util.stream.Stream;
-import java.util.zip.Inflater;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,15 +40,24 @@ public class AccessServerTest {
 //        tempFileName2 = "sub3_test";
 //    }
 
-   // @AfterEach
+   //@AfterEach
     public void afterEach(){
         System.out.println("----------------afterEach--------------------");
         deleteByName(tempFileName2);
         deleteByName(tempFileName);
         deleteByName(tempParentName);
+       // deleteAll();
     }
 
-    private void deleteByName(String name){
+    @AfterAll
+    public static void clean(){
+        System.out.println("----------------afterAll--------------------");
+        deleteByName(tempFileName2);
+        deleteByName(tempFileName);
+        deleteByName(tempParentName);
+    }
+
+    private static void deleteByName(String name){
         EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
         Query q = em.createNativeQuery("delete from file_dir_info f where f.name ='" + name + "'");
         em.getTransaction().begin();
@@ -62,6 +65,17 @@ public class AccessServerTest {
         em.getTransaction().commit();
         em.close();
     }
+
+    private void deleteAll(){
+        EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
+        Query q = em.createNativeQuery("delete from file_dir_info f where f.id != 1");
+        em.getTransaction().begin();
+        q.executeUpdate();
+        em.getTransaction().commit();
+        em.close();
+    }
+
+
 
     private void insertFileByName(String name, boolean isDir, Integer parent, Integer id){
         EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
