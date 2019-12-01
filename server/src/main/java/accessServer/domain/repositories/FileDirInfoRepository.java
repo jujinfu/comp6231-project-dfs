@@ -88,9 +88,9 @@ public class FileDirInfoRepository {
         return file != null;
     }
 
-    public static FileDirInfo getFile(String uri) throws RemoteException{
+    public static FileDirInfo getFile(String uri){
         if(!uri.startsWith(ROOT)){
-            throw new RemoteException("invalid path " + uri);
+            throw new IllegalArgumentException("invalid path " + uri);
         }
         String[] list=uri.split("\\\\");
         if(list.length == 0){ //is root
@@ -151,7 +151,7 @@ public class FileDirInfoRepository {
         return files;
     }
 
-    public static FileDirInfo createNewFile(String uri) throws RemoteException {
+    public static FileDirInfo createNewFile(String uri) {
         if(!uri.startsWith(ROOT)){
             return null;
         }
@@ -188,7 +188,7 @@ public class FileDirInfoRepository {
         return uri.substring(uri.lastIndexOf("\\") + 1);
     }
 
-    private static FileDirInfo getParentByUri(String uri) throws RemoteException {
+    private static FileDirInfo getParentByUri(String uri) {
         String parentUri = getParentPathByUri(uri);
         if (parentUri == null) {
             return null;
@@ -198,8 +198,11 @@ public class FileDirInfoRepository {
                 getFile(parentUri);
     }
 
+
     public static FileDirInfo createNewDir(FileDirInfo fileDirInfo) {
         fileDirInfo.setDir(true);
+        if(fileDirInfo.getParent()==null)
+            throw new IllegalArgumentException("dir no parent");
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
         em.persist(fileDirInfo);

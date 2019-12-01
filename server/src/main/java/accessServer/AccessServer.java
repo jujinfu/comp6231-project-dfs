@@ -107,33 +107,39 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
 
     @Override
     public String getLastModifiedTime(String absoluteUri) throws Exception {
-        return null;
+        throw new UnsupportedOperationException("not implemented");
+        //return null;
     }
 
     @Override
     public boolean uploadWithOverride(String absoluteUri, File file) throws Exception {
-        return false;
+        throw new UnsupportedOperationException("not implemented");
+        //return false;
     }
 
 
     @Override
     public File download(String uri) throws Exception {
-        return null;
+        throw new UnsupportedOperationException("not implemented");
+        //return null;
     }
 
     @Override
     public String[] listFiles(String uri) throws Exception {
-        return new String[0];
+        throw new UnsupportedOperationException("not implemented");
+        //return new String[0];
     }
 
     @Override
     public String[] listSubDirs(String uri) throws Exception {
-        return new String[0];
+        throw new UnsupportedOperationException("not implemented");
+        //return new String[0];
     }
 
     @Override
     public boolean createDir(String uri) throws Exception {
-        return false;
+        throw new UnsupportedOperationException("not implemented");
+        //return false;
     }
 
     @Override
@@ -141,22 +147,23 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
         //get parent id by path
 
         //
-
-        return false;
+        throw new UnsupportedOperationException("not implemented");
+        //return false;
     }
 
     @Override
     public boolean dirExists(String absoluteUri) throws Exception {
-        return false;
+        throw new UnsupportedOperationException("not implemented");
+        //return false;
     }
 
     @Override
     public void syncFile(String fromAbsoluteUri, String toAbsoluteUri) {
-
+        throw new UnsupportedOperationException("not implemented");
     }
 
     @Override
     public void updateFileMeta(String absoluteUri, String property) {
-
+        throw new UnsupportedOperationException("not implemented");
     }
 }

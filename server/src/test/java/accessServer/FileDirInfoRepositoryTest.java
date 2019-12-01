@@ -20,20 +20,59 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     @SneakyThrows
-    public void testExists(){
-        String uri="\\sub1\\sub2\\some.txt";
-        FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
-        boolean actual = FileDirInfoRepository.exists(actualFile);
-        assertTrue(actual);
+    public void testExists1(){
+
+        try {
+            //file to be tested
+            String uri = "\\underroot.txt";
+            //make sure new file does not exist
+            assertTrue(FileDirInfoRepository.getFile(uri) == null);
+            //create file
+            FileDirInfo file=FileDirInfoRepository.createNewFile(uri);
+            //make sure create did return a file
+            assertNotEquals(null,file);
+            //make sure exists function returns right value
+            assertTrue(FileDirInfoRepository.exists(file));
+            //cleanup
+            assertTrue(FileDirInfoRepository.deleteFileById(file.getId()));
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Test
     @SneakyThrows
     public void testExists2(){
-        String uri="\\underRoot.txt";
+        try {
+            //file to be tested
+            String uri = "\\subdir1\\subdir2\\underroot.txt";
+            //make sure new file does not exist
+            assertTrue(FileDirInfoRepository.getFile(uri) == null);
+
+            /*//create file
+            FileDirInfo file=FileDirInfoRepository.createNewFile(uri);
+            //make sure create did return a file
+            assertNotEquals(null,file);
+            //make sure exists function returns right value
+            assertTrue(FileDirInfoRepository.exists(file));
+            //cleanup
+            assertTrue(FileDirInfoRepository.deleteFileById(file.getId()));
+            */
+
+
+        }catch(Exception e){
+            e.printStackTrace();
+
+        }
+    }
+    @Test
+    @SneakyThrows
+    public void testExists3(){
+        String uri="\\somthing.txt";
         FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
         boolean actual = FileDirInfoRepository.exists(actualFile);
-        assertTrue(actual);
+        assertFalse(actual);
     }
 
     @Test
@@ -54,28 +93,32 @@ public class FileDirInfoRepositoryTest {
         assertFalse(actual);
     }
 
-    @Test
-    @SneakyThrows
-    public void testExists3(){
-        String uri="\\somthing.txt";
-        FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
-        boolean actual = FileDirInfoRepository.exists(actualFile);
-        assertFalse(actual);
-    }
+
 
     //pay attentation to data, I didn't prepare data
     @Test
     public void testGetFileById() {
-        FileDirInfo file = FileDirInfoRepository.getFileById(3);
-        assertEquals(file.getId(), 3);
+        FileDirInfo file = FileDirInfoRepository.getFileById(1);
+        assertEquals(file.getId(), 1);
     }
 
     @Test
     //pay attentation to data, I didn't prepare data
-    public void testFetChildernById() {
-        FileDirInfo dir = FileDirInfo.builder().id(3).build();
+    public void testGetChildernById() {
+
+        FileDirInfo p = FileDirInfoRepository.getRoot();
+        FileDirInfo dir = FileDirInfo.builder().name("test_dir").isDir(true).parent(p).statusByUser("test").status("Ready").build();
+        FileDirInfoRepository.createNewDir(dir);
+
+        FileDirInfo file1=FileDirInfoRepository.createNewFile("\\test_dir\\"+"1.txt");
+
+
+
         List<FileDirInfo> files = FileDirInfoRepository.getChildren(dir);
-        assertEquals(files.size(), 3);
+        assertEquals(files.size(), 1);
+
+        FileDirInfoRepository.deleteFileById(file1.getId());
+        FileDirInfoRepository.deleteFileById(dir.getId());
     }
 
 
@@ -90,13 +133,18 @@ public class FileDirInfoRepositoryTest {
     }
     */
 
+    /*
+    root has a name of ""
+    root has itself as parent because db constraint requires one
+    root has id of 1
+     */
     @Test
     public void testGetRoot() {
         FileDirInfo root = FileDirInfoRepository.getRoot();
         assertNotNull(root);
         assertEquals(1, root.getId());
-        assertEquals("\\", root.getName());
-        assertNull(root.getParent());
+        assertEquals("", root.getName());
+        assertEquals(root,root.getParent());
     }
 
     @Test

@@ -5,9 +5,12 @@ import java.net.Socket;
 
 
 public class Client extends Commands {
-    private String serverIP="34.202.163.106";
+    private String serverIP;
     private int serverPort=9999;
 
+    public Client(String serverIP){
+        this.serverIP=serverIP;
+    }
 
     public String createFile(String uri) throws Exception{
         Socket clientSocket=new Socket(serverIP,serverPort);
@@ -43,25 +46,29 @@ public class Client extends Commands {
     }
 
     public boolean uploadFile(String uri, File file) throws Exception {
-        //rmiServer.createFile(uri);
-        return false;
+        throw new UnsupportedOperationException("not implemented");
+        //return false;
     }
 
     public File downloadFile(String uri) throws Exception {
         //rmiServer.download(uri);
-        return null;
+        throw new UnsupportedOperationException("not implemented");
+        //return null;
     }
 
     public String getFileMeta(String uri) throws Exception {
-        return null;
+        throw new UnsupportedOperationException("not implemented");
+        //return null;
     }
 
     public String[] listSubDirs(String uri) throws Exception {
-        return null;
+        throw new UnsupportedOperationException("not implemented");
+        //return null;
     }
 
     public String[] listFiles(String uri) throws Exception {
-        return null;
+        throw new UnsupportedOperationException("not implemented");
+        //return null;
     }
 
 }

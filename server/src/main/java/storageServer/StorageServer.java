@@ -16,7 +16,7 @@ public class StorageServer implements StorageServerInterface {
     // file path based on linux currently
     private final Path serverStorageRoot= Paths.get("/tmp/data");
 
-    public StorageServer() throws RemoteException {
+    public StorageServer() {
         super();
         if(Files.notExists(serverStorageRoot)){
             //throw new RemoteException("Server root not found");

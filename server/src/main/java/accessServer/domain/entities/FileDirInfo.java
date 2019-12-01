@@ -18,7 +18,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+//@EqualsAndHashCode
 //@ToString(exclude = "parent")
 @Entity(name="file_dir_info")
 @NamedQueries({

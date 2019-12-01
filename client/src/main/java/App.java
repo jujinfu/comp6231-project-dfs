@@ -5,9 +5,12 @@ import java.util.Scanner;
 public class App extends Commands{
 
     public static final void main(final String args[]){
+        String serverIP="34.202.163.106";
+        String serverIP2="35.156.72.221";
 
         try {
-            Client client=new Client();
+            Client client=new Client(serverIP);
+
             help();
             System.out.println("please enter command...");
             while(true){
