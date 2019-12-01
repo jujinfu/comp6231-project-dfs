@@ -68,14 +68,16 @@ public class ServerController extends Commands{
         BufferedReader in=new BufferedReader(new InputStreamReader(client.getInputStream()));
         String msg=in.readLine();
 
+        String result="";
         try{
-            handleCmd(msg);
+            result=handleCmd(msg);
         }catch (Exception e){
             msg=e.getMessage();
         }
         msg=client.getRemoteSocketAddress()+":"+msgWrap(msg);
         System.out.println("Msg "+msg.replace("\n", "")+" Received from "+client.getRemoteSocketAddress());
-        return msg;
+        System.out.println("Result: "+result);
+        return msg+"\n"+msgWrap(result);
     }
 
     private String handleCmd(String msg) throws Exception {

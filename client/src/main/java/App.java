@@ -45,16 +45,16 @@ public class App extends Commands{
                     System.out.println("deleting dir "+uri);
                     resp=client.deleteDir(uri);
                 } else if (cmd.equals(list_files_cmd)) {
-                    System.out.println("list files of dir"+uri);
+                    System.out.println("listing file of "+uri);
                     resp=client.listFiles(uri);
                 }else if (cmd.equals(list_dir_cmd)) {
-                    System.out.println("list files of dir"+uri);
+                    System.out.println("listing dir of "+uri);
                     resp=client.listSubDirs(uri);
                 }else if (cmd.equals(exists_dir_cmd)) {
-                    System.out.println("list files of dir"+uri);
+                    System.out.println("checking if dir exists  "+uri);
                     resp=client.dirExists(uri);
                 }else if (cmd.equals(exists_file_cmd)) {
-                    System.out.println("list files of dir"+uri);
+                    System.out.println("checking if file exists "+uri);
                     resp=client.fileExists(uri);
                 }else{
                     resp="Wrong command "+s;
