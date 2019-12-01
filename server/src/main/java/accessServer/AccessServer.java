@@ -98,13 +98,13 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
         }
         FileDirInfo fileDirInfo = FileDirInfoRepository.getFile(uri);
         log.debug("deleteFile FileDirInfoRepository.getFile(uri) = {} ", fileDirInfo);
-        if(fileDirInfo.isDir()){
-            log.debug("IllegalArgumentException(\"URI is a directory\")");
-            throw new IllegalArgumentException("URI is a directory");
-        }
         if(!fileExists(fileDirInfo)){
             log.debug("RemoteException(\"file not found\")");
             throw new RemoteException("file not found");
+        }
+        if(fileDirInfo.isDir()){
+            log.debug("IllegalArgumentException(\"URI is a directory\")");
+            throw new IllegalArgumentException("URI is a directory");
         }
         if(storageServer.deleteFile(uri)){
             log.debug("deleting file form db...");
