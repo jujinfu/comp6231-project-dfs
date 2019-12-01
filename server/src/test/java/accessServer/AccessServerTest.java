@@ -23,9 +23,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AccessServerTest {
 
     private static AccessServer accessServer;
-    private static String tempParentName = "sub1";
-    private static String tempFileName = "sub2";
-    private static String tempFileName2 = "sub3";
+    private static String tempParentName = "sub1_test";
+    private static String tempFileName = "sub2_test";
+    private static String tempFileName2 = "sub3_test";
 
     public AccessServerTest() throws Exception{
         System.out.println("----------------constructor--------------------");
@@ -38,13 +38,13 @@ public class AccessServerTest {
         accessServer=new AccessServer();
     }
 
-    @BeforeEach
-    public void beforeEach(){
-        System.out.println("----------------beforeEach--------------------");
-        tempFileName = "sub1";
-        tempParentName = "sub2";
-        tempFileName2 = "sub3";
-    }
+//    @BeforeEach
+//    public void beforeEach(){
+//        System.out.println("----------------beforeEach--------------------");
+//        tempFileName = "sub1_test";
+//        tempParentName = "sub2_test";
+//        tempFileName2 = "sub3_test";
+//    }
 
     @AfterEach
     public void afterEach(){

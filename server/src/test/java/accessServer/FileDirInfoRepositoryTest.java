@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class FileDirInfoRepositoryTest {
 
-    private static String tempParentName = "sub1";
-    private static String tempFileName = "sub2";
+    private static String tempParentName = "sub1_test";
+    private static String tempFileName = "sub2_test";
     private static String SLASH = "/";
 
     @BeforeEach
