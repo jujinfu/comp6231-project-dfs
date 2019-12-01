@@ -16,7 +16,9 @@
             <property name="hibernate.c3p0.timeout" value="2000" />
 
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://34.202.163.106:3306/dfs" />
+            <!--this will be change to use localhost only-->
+            <!--<property name="javax.persistence.jdbc.url" value="jdbc:mysql://34.202.163.106:3306/dfs" />-->
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/dfs" />
             <!--fill username in the value attr-->
             <property name="javax.persistence.jdbc.user" value="root" />
             <!--fill password in the value attr-->
