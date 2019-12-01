@@ -33,18 +33,21 @@ public class AccessServerTest {
 
     @BeforeAll
     public static void beforeClass() throws Exception{
+        System.out.println("----------------beforeAll--------------------");
         accessServer=new AccessServer();
     }
 
     @BeforeEach
     public void beforeEach(){
-        tempParentName = UUID.randomUUID().toString();
-        tempFileName = UUID.randomUUID().toString();
-        tempFileName2 = UUID.randomUUID().toString();
+        System.out.println("----------------beforeEach--------------------");
+        tempFileName = "sub1";
+        tempParentName = "sub2";
+        tempFileName2 = "sub3";
     }
 
     @AfterEach
     public void afterEach(){
+        System.out.println("----------------afterEach--------------------");
         deleteByName(tempFileName2);
         deleteByName(tempFileName);
         deleteByName(tempParentName);

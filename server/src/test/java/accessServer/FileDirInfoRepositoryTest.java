@@ -23,12 +23,14 @@ public class FileDirInfoRepositoryTest {
 
     @BeforeEach
     public void beforeEach(){
-        tempFileName = UUID.randomUUID().toString();
-        tempParentName = UUID.randomUUID().toString();
+        System.out.println("----------------beforeEach--------------------");
+        tempFileName = "sub1";
+        tempParentName = "sub2";
     }
 
     @AfterEach
     public void afterEach(){
+        System.out.println("----------------afterEach--------------------");
         deleteByName(tempFileName);
         deleteByName(tempParentName);
     }
