@@ -3,6 +3,7 @@ package accessServer;
 
 import accessServer.domain.EntityManagerHelper;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 public class AccessServerTest {
 
     private static AccessServer accessServer;
@@ -28,14 +30,10 @@ public class AccessServerTest {
 
     @BeforeAll
     public static void beforeClass() throws Exception{
-        System.out.println("----------------beforeAll--------------------");
+        log.info("----------------beforeAll--------------------");
         accessServer=new AccessServer();
     }
 
-    @AfterAll
-    public static void afterAll(){
-        EntityManagerHelper.close();
-    }
 
 //    @BeforeEach
 //    public void beforeEach(){
@@ -47,7 +45,7 @@ public class AccessServerTest {
 
    @AfterEach
     public void afterEach(){
-        System.out.println("----------------afterEach--------------------");
+        log.info("----------------after Each--------------------");
         deleteByName(tempFileName2);
         deleteByName(tempFileName);
         deleteByName(tempParentName);;
@@ -80,6 +78,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testFileExists() {
+        log.info("----------------testFileExists--------------------");
         //afterEach();
             if (accessServer == null) {
                 Integer pId = 12345;
@@ -104,6 +103,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testCreateFile() {
+        log.info("----------------testCreateFile--------------------");
         //afterEach();
         String uri = "/" + tempFileName;
         assert (accessServer.createFile(uri));
@@ -114,6 +114,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testCreateDir() {
+        log.info("----------------testCreateDir--------------------");
         //afterEach();
         String uri = "/" + tempFileName;
         assert (accessServer.createDir(uri));
@@ -124,6 +125,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testCreateDir_failFileNotEmpty() {
+        log.info("----------------testCreateDir_failFileNotEmpty--------------------");
         //afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
@@ -139,7 +141,8 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testCreateDir_failDirIsFile() {
-        //afterEach();
+        log.info("---------------- testCreateDir_failDirIsFile--------------------");
+        //afterEach()
         Integer pid = 12345;
         Integer fId = 12346;
         String uri = "/" + tempParentName + "/" + tempFileName ;
@@ -154,6 +157,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testCreateDir_failDirNotExist() {
+        log.info("----------------testCreateDir_failDirNotExist--------------------");
         //afterEach();
         String dir = UUID.randomUUID().toString();
         String uri = "/" + dir  ;
@@ -165,6 +169,7 @@ public class AccessServerTest {
 
     @Test
     public void testCreateNewFileByUri_failFileAlreadyExist() {
+        log.info("----------------testCreateNewFileByUri_failFileAlreadyExist--------------------");
         //afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
@@ -179,6 +184,7 @@ public class AccessServerTest {
 
     @Test
     public void testCreateNewFileByUri_failParentNotExist() {
+        log.info("----------------testCreateNewFileByUri_failParentNotExist--------------------");
        // afterEach();
         String dummyParent = UUID.randomUUID().toString();
         String uri = "/" + "dummyParent" + "/" + tempFileName;
@@ -191,6 +197,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testListFiles() {
+        log.info("----------------testListFiles--------------------");
         //afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
@@ -210,6 +217,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testListFiles_emptyNoFile() {
+        log.info("----------------testListFiles_emptyNoFile--------------------");
         //afterEach();
         Integer pid = 12345;
         Integer fId2 = 12347;
@@ -227,6 +235,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testListSubDir() {
+        log.info("----------------testListSubDir--------------------");
        // afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
@@ -246,6 +255,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testListSubDir_noSubDir() {
+        log.info("----------------testListSubDir_noSubDir--------------------");
        // afterEach();
         Integer pid = 12345;
         Integer fId = 12346;

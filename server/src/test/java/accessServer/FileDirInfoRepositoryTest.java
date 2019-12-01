@@ -25,23 +25,23 @@ public class FileDirInfoRepositoryTest {
 
     @AfterEach
     public void afterEach(){
-        System.out.println("----------------afterEach--------------------");
+        log.info("----------------after Each--------------------");
         deleteByName(tempFileName2);
         deleteByName(tempFileName);
         deleteByName(tempParentName);
     }
 
-//
-//    @AfterAll
-//    public static void afterAll(){
-//        System.out.println("----------------afterAll--------------------");
-//        deleteByName(tempFileName2);
-//        deleteByName(tempFileName);
-//        deleteByName(tempParentName);
-//    }
+    @BeforeAll
+    public static void beforeAll(){
+        log.info("----------------before All--------------------");
+        deleteByName(tempFileName2);
+        deleteByName(tempFileName);
+        deleteByName(tempParentName);
+    }
 
     @Test
     public void testExists1() {
+        log.info("Running repo testExists1");
        // afterEach();
         //file to be tested
         String uri = "/underroot.txt";
@@ -55,12 +55,11 @@ public class FileDirInfoRepositoryTest {
         assertTrue(FileDirInfoRepository.exists(file));
         //cleanup
         assertTrue(FileDirInfoRepository.deleteFileById(file.getId()));
-
-
     }
 
     @Test
     public void testExists2() {
+        log.info("Running repo testExists2");
        // afterEach();
 
         //file to be tested
@@ -71,6 +70,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testExists3(){
+        log.info("Running repo testExists3");
         //afterEach();
         String uri="/somthing.txt";
         FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
@@ -81,6 +81,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testExists4(){
+        log.info("Running repo testExists4");
        // afterEach();
         String uri="/";
         FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
@@ -91,6 +92,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testExists5(){
+        log.info("Running repo testExists5");
        // afterEach();
         String uri="/sub1/some.txt";
         FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
@@ -101,6 +103,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testGetFileById() {
+        log.info("Running repo testGetFileById");
         //afterEach();
         FileDirInfo file = FileDirInfoRepository.getFileById(1);
 
@@ -142,6 +145,7 @@ public class FileDirInfoRepositoryTest {
      */
     @Test
     public void testGetRoot() {
+        log.info("Running repo testGetRoot");
         //afterEach();
         FileDirInfo root = FileDirInfoRepository.getRoot();
 
@@ -273,7 +277,6 @@ public class FileDirInfoRepositoryTest {
         Integer pId = 12345;
         Integer fId = 12346;
         insertFileByName(tempParentName, true, 1,pId);
-        insertFileByName(tempFileName, true, pId, fId);
 
         String uri = "/" + tempParentName + "/" + tempFileName;
 
