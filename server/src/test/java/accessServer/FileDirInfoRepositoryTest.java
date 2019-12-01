@@ -30,18 +30,18 @@ public class FileDirInfoRepositoryTest {
         deleteByName(tempFileName);
         deleteByName(tempParentName);
     }
-
-    @AfterAll
-    public static void afterAll(){
-        System.out.println("----------------afterAll--------------------");
-        deleteByName(tempFileName2);
-        deleteByName(tempFileName);
-        deleteByName(tempParentName);
-    }
+//
+//    @AfterAll
+//    public static void afterAll(){
+//        System.out.println("----------------afterAll--------------------");
+//        deleteByName(tempFileName2);
+//        deleteByName(tempFileName);
+//        deleteByName(tempParentName);
+//    }
 
     @Test
     public void testExists1() {
-        afterEach();
+       // afterEach();
         //file to be tested
         String uri = "/underroot.txt";
         //make sure new file does not exist
@@ -55,12 +55,12 @@ public class FileDirInfoRepositoryTest {
         //cleanup
         assertTrue(FileDirInfoRepository.deleteFileById(file.getId()));
 
-        afterEach();
+
     }
 
     @Test
     public void testExists2() {
-        afterEach();
+       // afterEach();
 
         //file to be tested
         String uri = "/subdir1/subdir2/underroot.txt";
@@ -70,7 +70,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testExists3(){
-        afterEach();
+        //afterEach();
         String uri="/somthing.txt";
         FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
         boolean actual = FileDirInfoRepository.exists(actualFile);
@@ -80,7 +80,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testExists4(){
-        afterEach();
+       // afterEach();
         String uri="/";
         FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
         boolean actual = FileDirInfoRepository.exists(actualFile);
@@ -90,7 +90,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testExists5(){
-        afterEach();
+       // afterEach();
         String uri="/sub1/some.txt";
         FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
         boolean actual = FileDirInfoRepository.exists(actualFile);
@@ -100,7 +100,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testGetFileById() {
-        afterEach();
+        //afterEach();
         FileDirInfo file = FileDirInfoRepository.getFileById(1);
 
         assertEquals(file.getId(), 1);
@@ -109,7 +109,7 @@ public class FileDirInfoRepositoryTest {
     @Test
     public void testGetChildernById() {
         log.info("Running repo testGetChildernById");
-        afterEach();
+        //afterEach();
         Integer parentId = 12345;
         insertFileByName(tempParentName, true, 1, parentId);
         FileDirInfo dir = FileDirInfo.builder().id(parentId).build();
@@ -141,7 +141,7 @@ public class FileDirInfoRepositoryTest {
      */
     @Test
     public void testGetRoot() {
-        afterEach();
+        //afterEach();
         FileDirInfo root = FileDirInfoRepository.getRoot();
 
         assertNotNull(root);
@@ -153,7 +153,7 @@ public class FileDirInfoRepositoryTest {
     @Test
     public void testGetRootDirs() {
         log.info("Running repo testGetRootDirs");
-        afterEach();
+        //afterEach();
         insertFileByName(tempParentName, true, 1, 12345);
         insertFileByName(tempFileName, true, 1, 12346);
 
@@ -167,7 +167,7 @@ public class FileDirInfoRepositoryTest {
     @Test
     public void testCreateDir() {
         log.info("Running repo testCreateDir");
-        afterEach();
+       // afterEach();
         Integer pid = 12345;
         insertFileByName(tempParentName, true, 1, pid);
         String uri = SLASH + tempParentName + SLASH + tempFileName;
@@ -187,7 +187,7 @@ public class FileDirInfoRepositoryTest {
     @Test
     public void testDeleteFile() {
         log.info("Running repo testDeleteFile");
-        afterEach();
+       // afterEach();
         FileDirInfo p = FileDirInfoRepository.getRoot();
         Integer id = 12345;
         String fileName = tempFileName;
@@ -207,7 +207,7 @@ public class FileDirInfoRepositoryTest {
     @Test
     public void testCreateByNativeQuery() {
         log.info("Running repo testCreateByNativeQuery");
-        afterEach();
+        //afterEach();
         String name = tempFileName;
         Integer pId = 1;
         FileDirInfo file = new FileDirInfo();
@@ -230,7 +230,7 @@ public class FileDirInfoRepositoryTest {
     @Test
     public void testUpdate() {
         log.info("Running repo testUpdate");
-        afterEach();
+       // afterEach();
         Integer id = 12345;
         String fileName = tempFileName;
         Date oldLastModifiedDate = getDatBefore(7);
@@ -253,7 +253,7 @@ public class FileDirInfoRepositoryTest {
     @Test
     public void testCreateNewFileByUri(){
         log.info("Running repo testCreateNewFileByUri");
-        afterEach();
+        //afterEach();
         String name = tempFileName;
         String uri = "/" + name;
 
@@ -268,7 +268,7 @@ public class FileDirInfoRepositoryTest {
     @Test
     public void testCreateNewFileByNestedUri(){
         log.info("Running repo testCreateNewFileByNestedUri");
-        afterEach();
+        //afterEach();
         Integer pId = 12345;
         Integer fId = 12346;
         insertFileByName(tempParentName, true, 1,pId);
@@ -318,6 +318,7 @@ public class FileDirInfoRepositoryTest {
                 .setParameter("parent", parent);
         q.executeUpdate();
         em.getTransaction().commit();
+        em.close();
     }
 
     private Date getDatBefore(int days) {

@@ -21,15 +21,20 @@ public class AccessServerTest {
     private static String tempFileName = "sub2_test";
     private static String tempFileName2 = "sub3_test";
 
-    public AccessServerTest() throws Exception{
-        System.out.println("----------------constructor--------------------");
-        accessServer=new AccessServer();
-    }
+//    public AccessServerTest() throws Exception{
+//        System.out.println("----------------constructor--------------------");
+//        accessServer=new AccessServer();
+//    }
 
     @BeforeAll
     public static void beforeClass() throws Exception{
         System.out.println("----------------beforeAll--------------------");
         accessServer=new AccessServer();
+    }
+
+    @AfterAll
+    public static void afterAll(){
+        EntityManagerHelper.close();
     }
 
 //    @BeforeEach
@@ -40,21 +45,12 @@ public class AccessServerTest {
 //        tempFileName2 = "sub3_test";
 //    }
 
-   //@AfterEach
+   @AfterEach
     public void afterEach(){
         System.out.println("----------------afterEach--------------------");
         deleteByName(tempFileName2);
         deleteByName(tempFileName);
-        deleteByName(tempParentName);
-       // deleteAll();
-    }
-
-    @AfterAll
-    public static void clean(){
-        System.out.println("----------------afterAll--------------------");
-        deleteByName(tempFileName2);
-        deleteByName(tempFileName);
-        deleteByName(tempParentName);
+        deleteByName(tempParentName);;
     }
 
     private static void deleteByName(String name){
@@ -65,17 +61,6 @@ public class AccessServerTest {
         em.getTransaction().commit();
         em.close();
     }
-
-    private void deleteAll(){
-        EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
-        Query q = em.createNativeQuery("delete from file_dir_info f where f.id != 1");
-        em.getTransaction().begin();
-        q.executeUpdate();
-        em.getTransaction().commit();
-        em.close();
-    }
-
-
 
     private void insertFileByName(String name, boolean isDir, Integer parent, Integer id){
         EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
@@ -89,12 +74,13 @@ public class AccessServerTest {
                 .setParameter("parent", parent);
         q.executeUpdate();
         em.getTransaction().commit();
+        em.close();
     }
 
     @Test
     @SneakyThrows
     public void testFileExists() {
-        afterEach();
+        //afterEach();
             if (accessServer == null) {
                 Integer pId = 12345;
                 Integer fId = 12346;
@@ -118,7 +104,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testCreateFile() {
-        afterEach();
+        //afterEach();
         String uri = "/" + tempFileName;
         assert (accessServer.createFile(uri));
         assert (accessServer.fileExists(uri));
@@ -128,7 +114,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testCreateDir() {
-        afterEach();
+        //afterEach();
         String uri = "/" + tempFileName;
         assert (accessServer.createDir(uri));
         assert (accessServer.dirExists(uri));
@@ -138,7 +124,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testCreateDir_failFileNotEmpty() {
-        afterEach();
+        //afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
         String uri = "/" + tempParentName ;
@@ -153,7 +139,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testCreateDir_failDirIsFile() {
-        afterEach();
+        //afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
         String uri = "/" + tempParentName + "/" + tempFileName ;
@@ -168,7 +154,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testCreateDir_failDirNotExist() {
-        afterEach();
+        //afterEach();
         String dir = UUID.randomUUID().toString();
         String uri = "/" + dir  ;
 
@@ -179,7 +165,7 @@ public class AccessServerTest {
 
     @Test
     public void testCreateNewFileByUri_failFileAlreadyExist() {
-        afterEach();
+        //afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
         String uri = "/" + tempParentName + "/" + tempFileName;
@@ -193,7 +179,7 @@ public class AccessServerTest {
 
     @Test
     public void testCreateNewFileByUri_failParentNotExist() {
-        afterEach();
+       // afterEach();
         String dummyParent = UUID.randomUUID().toString();
         String uri = "/" + "dummyParent" + "/" + tempFileName;
 
@@ -205,7 +191,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testListFiles() {
-        afterEach();
+        //afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
         Integer fId2 = 12347;
@@ -224,7 +210,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testListFiles_emptyNoFile() {
-        afterEach();
+        //afterEach();
         Integer pid = 12345;
         Integer fId2 = 12347;
         String uri = "/" + tempParentName;
@@ -241,7 +227,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testListSubDir() {
-        afterEach();
+       // afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
         Integer fId2 = 12347;
@@ -260,7 +246,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testListSubDir_noSubDir() {
-        afterEach();
+       // afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
         Integer fId2 = 12347;
