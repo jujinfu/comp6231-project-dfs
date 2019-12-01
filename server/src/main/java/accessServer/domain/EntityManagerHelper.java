@@ -1,8 +1,11 @@
 package accessServer.domain;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+@Slf4j
 public class EntityManagerHelper {
 
     private static final String NAME = "MATADATADB";
@@ -13,6 +16,7 @@ public class EntityManagerHelper {
         if (emFactory == null) {
             emFactory = Persistence.createEntityManagerFactory(NAME);
         }
+        log.info("Created emFactory...");
         return emFactory;
     }
 

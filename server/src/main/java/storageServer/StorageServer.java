@@ -1,6 +1,7 @@
 package storageServer;
 
 import com.mysql.cj.xdevapi.RemoveStatement;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -11,6 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+@Slf4j
 public class StorageServer implements StorageServerInterface {
 
     // file path based on linux currently
@@ -33,13 +35,14 @@ public class StorageServer implements StorageServerInterface {
          4. register with DB
         */
         try{
+            log.info("create File in storage server, uri: {}", uri);
             if(!uri.startsWith(serverStorageRoot.toString()))
                 uri=serverStorageRoot.toString()+uri;
             String filePath=uri.substring(0,uri.lastIndexOf('/'));
 
             // !db.directories.any(uri);
             if(!Files.exists(Paths.get(filePath))){
-               throw new IOException("path not found");
+               throw new IOException("path not found, path " + filePath);
             }
             // db.files.any(uri);
             System.out.println(uri);

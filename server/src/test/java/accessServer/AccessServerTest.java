@@ -23,25 +23,12 @@ public class AccessServerTest {
     private static String tempFileName = "sub2_test";
     private static String tempFileName2 = "sub3_test";
 
-//    public AccessServerTest() throws Exception{
-//        System.out.println("----------------constructor--------------------");
-//        accessServer=new AccessServer();
-//    }
-
     @BeforeAll
     public static void beforeClass() throws Exception{
         log.info("----------------beforeAll--------------------");
         accessServer=new AccessServer();
     }
 
-
-//    @BeforeEach
-//    public void beforeEach(){
-//        System.out.println("----------------beforeEach--------------------");
-//        tempFileName = "sub1_test";
-//        tempParentName = "sub2_test";
-//        tempFileName2 = "sub3_test";
-//    }
 
    @AfterEach
     public void afterEach(){
@@ -185,8 +172,6 @@ public class AccessServerTest {
     @Test
     public void testCreateNewFileByUri_failParentNotExist() {
         log.info("----------------testCreateNewFileByUri_failParentNotExist--------------------");
-       // afterEach();
-        String dummyParent = UUID.randomUUID().toString();
         String uri = "/" + "dummyParent" + "/" + tempFileName;
 
         assertThrows(RemoteException.class, () ->
