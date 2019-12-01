@@ -77,7 +77,7 @@ public class ServerController extends Commands{
         msg=client.getRemoteSocketAddress()+":"+msgWrap(msg);
         System.out.println("Msg "+msg.replace("\n", "")+" Received from "+client.getRemoteSocketAddress());
         System.out.println("Result: "+result);
-        return msg+"\n"+msgWrap(result);
+        return result;
     }
 
     private String handleCmd(String msg) throws Exception {
