@@ -56,6 +56,8 @@ public class App extends Commands{
                 }else if (cmd.equals(exists_file_cmd)) {
                     System.out.println("list files of dir"+uri);
                     resp=client.fileExists(uri);
+                }else{
+                    resp="Wrong command "+s;
                 }
                 System.out.println("Server resp: "+resp);
                 System.out.println("Command finished");

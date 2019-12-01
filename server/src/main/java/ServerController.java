@@ -138,7 +138,9 @@ public class ServerController extends Commands{
                 returnMsg.append( "Dir exists: "+uri+"...Done");
             else
                 returnMsg.append( "Dir NOT exists: "+uri+"...Done");
+        }else{
+            returnMsg.append("wrong command");
         }
-        return null;
+        return returnMsg.toString();
     }
 }
