@@ -2,6 +2,7 @@ package accessServer;
 
 import accessServer.domain.entities.FileDirInfo;
 import accessServer.domain.repositories.FileDirInfoRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import storageServer.StorageServer;
 import storageServer.StorageServerInterface;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 public class AccessServer extends UnicastRemoteObject implements StorageManagementInterface, StorageServerInterface {
 
     private StorageServer storageServer = new StorageServer();
@@ -91,20 +92,25 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
 
     @Override
     public boolean deleteFile(String uri) throws Exception {
+        log.debug("deleteFile uri =  " + uri);
         if(!Utities.isUriValid(uri)){
-            throw new IllegalArgumentException("Path is invalid uri: "+ uri);
+            throw new IllegalArgumentException("Path is invalid uri: {}"+ uri);
         }
         FileDirInfo fileDirInfo = FileDirInfoRepository.getFile(uri);
+        log.debug("deleteFile FileDirInfoRepository.getFile(uri) = {} ", fileDirInfo);
         if(fileDirInfo.isDir()){
+            log.debug("IllegalArgumentException(\"URI is a directory\")");
             throw new IllegalArgumentException("URI is a directory");
         }
         if(!fileExists(fileDirInfo)){
+            log.debug("RemoteException(\"file not found\")");
             throw new RemoteException("file not found");
         }
-        if(storageServer.deleteFile(uri)
-        ){
+        if(storageServer.deleteFile(uri)){
+            log.debug("deleting file form db...");
             FileDirInfoRepository.deleteFileById(fileDirInfo.getId());
         }
+        log.debug("deleting file done, return true");
         return true;
     }
 

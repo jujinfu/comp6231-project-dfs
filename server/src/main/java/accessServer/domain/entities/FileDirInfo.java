@@ -19,7 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 //@EqualsAndHashCode
-//@ToString(exclude = "parent")
+@ToString(exclude = "parent")
 @Entity(name="file_dir_info")
 @NamedQueries({
         @NamedQuery(name = "FileDirInfo.findById",
