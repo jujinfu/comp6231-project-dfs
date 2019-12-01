@@ -17,18 +17,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class FileDirInfoRepositoryTest {
 
-    private static String tempParentName = "sub1_test";
-    private static String tempFileName = "sub2_test";
+    private static String tempParentName = "sub1_repo_test";
+    private static String tempFileName = "sub2_repo_test";
     private static String SLASH = "/";
 
-    @BeforeEach
-    public void beforeEach(){
-        System.out.println("----------------beforeEach--------------------");
-        tempFileName = "sub1";
-        tempParentName = "sub2";
-    }
+//    @BeforeEach
+//    public void beforeEach(){file already exists
+//        System.out.println("----------------beforeEach--------------------");
+//        tempFileName = "sub1";
+//        tempParentName = "sub2";
+//    }
 
-    @AfterEach
+    //@AfterEach
     public void afterEach(){
         System.out.println("----------------afterEach--------------------");
         deleteByName(tempFileName);
@@ -37,7 +37,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testExists1(){
-
+        afterEach();
         try {
             //file to be tested
             String uri = "/underroot.txt";
@@ -61,6 +61,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testExists2(){
+        afterEach();
         try {
             //file to be tested
             String uri = "/subdir1/subdir2/underroot.txt";
@@ -87,40 +88,45 @@ public class FileDirInfoRepositoryTest {
     }
     @Test
     public void testExists3(){
+        afterEach();
         String uri="/somthing.txt";
         FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
         boolean actual = FileDirInfoRepository.exists(actualFile);
-        afterEach();
+
         assertFalse(actual);
     }
 
     @Test
     public void testExists4(){
+        afterEach();
         String uri="/";
         FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
         boolean actual = FileDirInfoRepository.exists(actualFile);
-        afterEach();
+
         assertTrue(actual);
     }
 
     @Test
     public void testExists5(){
+        afterEach();
         String uri="/sub1/some.txt";
         FileDirInfo actualFile = FileDirInfoRepository.getFile(uri);
         boolean actual = FileDirInfoRepository.exists(actualFile);
-        afterEach();
+
         assertFalse(actual);
     }
 
     @Test
     public void testGetFileById() {
-        FileDirInfo file = FileDirInfoRepository.getFileById(1);
         afterEach();
+        FileDirInfo file = FileDirInfoRepository.getFileById(1);
+
         assertEquals(file.getId(), 1);
     }
 
     @Test
     public void testGetChildernById() {
+        afterEach();
         Integer parentId = 12345;
         insertFileByName(tempParentName, true, 1, parentId);
         FileDirInfo dir = FileDirInfo.builder().id(parentId).build();
@@ -131,7 +137,6 @@ public class FileDirInfoRepositoryTest {
 
         List<FileDirInfo> files = FileDirInfoRepository.getChildren(dir);
 
-        afterEach();
         assertEquals(files.size(), 2);
     }
 
@@ -153,8 +158,9 @@ public class FileDirInfoRepositoryTest {
      */
     @Test
     public void testGetRoot() {
-        FileDirInfo root = FileDirInfoRepository.getRoot();
         afterEach();
+        FileDirInfo root = FileDirInfoRepository.getRoot();
+
         assertNotNull(root);
         assertEquals(1, root.getId());
         assertEquals("", root.getName());
@@ -163,12 +169,12 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testGetRootDirs() {
+        afterEach();
         insertFileByName(tempParentName);
         insertFileByName(tempFileName);
 
         List<FileDirInfo> root = FileDirInfoRepository.getRootDirAndFiles();
 
-        afterEach();
         assertNotNull(root);
         assertTrue(root.size() >= 1);
         root.forEach(f -> assertEquals(f.getParent().getId(), 1));
@@ -176,6 +182,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testCreateDir() {
+        afterEach();
         Integer pid = 12345;
         insertFileByName(tempParentName, true, 1, pid);
         String uri = SLASH + tempParentName + SLASH + tempFileName;
@@ -184,7 +191,6 @@ public class FileDirInfoRepositoryTest {
 
         List<FileDirInfo> actualDir = getByName(tempFileName);
 
-        afterEach();
         assertNotNull(actualDir);
         assertTrue(actualDir.size() == 1);
         FileDirInfo file = actualDir.get(0);
@@ -195,6 +201,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testDeleteFile() {
+        afterEach();
         FileDirInfo p = FileDirInfoRepository.getRoot();
         Integer id = 12345;
         String fileName = tempFileName;
@@ -218,13 +225,13 @@ public class FileDirInfoRepositoryTest {
         Query q2 = em.createQuery("select f from file_dir_info f where f.id=:id").setParameter("id", id);
         List<FileDirInfo> actualDir = q2.getResultList();
 
-        afterEach();
         assertEquals(0, actualDir.size());
 
     }
 
     @Test
     public void testCreateByNativeQuery() {
+        afterEach();
         String name = tempFileName;
         Integer pId = 1;
         FileDirInfo file = new FileDirInfo();
@@ -239,7 +246,6 @@ public class FileDirInfoRepositoryTest {
         Query q2 = em.createQuery("select f from file_dir_info f where f.name=:name").setParameter("name", name);
         List<FileDirInfo> actualResult = q2.getResultList();
 
-        afterEach();
         assertNotNull(actualResult);
         assertTrue(actualResult.size() == 1);
         FileDirInfo actualFile = actualResult.get(0);
@@ -257,6 +263,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testUpdate() {
+        afterEach();
         FileDirInfo p = FileDirInfoRepository.getRoot();
         Integer id = 12345;
         String fileName = tempFileName;
@@ -272,7 +279,6 @@ public class FileDirInfoRepositoryTest {
 
         List<FileDirInfo> actualResult = getByName(fileName);
 
-        afterEach();
         assertEquals(1, actualResult.size());
         FileDirInfo actualUpdatedFile = actualResult.get(0);
         assertTrue(oldLastModifiedDate.getTime() < actualUpdatedFile.getLastModifiedDate().getTime());
@@ -281,6 +287,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testCreateNewFileByUri(){
+        afterEach();
         String name = tempFileName;
         String uri = "/" + name;
 
@@ -296,6 +303,7 @@ public class FileDirInfoRepositoryTest {
 
     @Test
     public void testCreateNewFileByNestedUri(){
+        afterEach();
         EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
         em.getTransaction().begin();
         Query q = em.createNativeQuery("insert into file_dir_info ( name,is_dir,status_by_user,parent) " +
@@ -312,7 +320,6 @@ public class FileDirInfoRepositoryTest {
 
         List<FileDirInfo> actualResult = getByName(tempFileName);
 
-        afterEach();
         assertEquals( 1, actualResult.size());
         FileDirInfo actualFile = actualResult.get(0);
         assertEquals(tempFileName, actualFile.getName());

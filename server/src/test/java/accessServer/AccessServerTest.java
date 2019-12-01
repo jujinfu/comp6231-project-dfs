@@ -46,7 +46,7 @@ public class AccessServerTest {
 //        tempFileName2 = "sub3_test";
 //    }
 
-    @AfterEach
+   // @AfterEach
     public void afterEach(){
         System.out.println("----------------afterEach--------------------");
         deleteByName(tempFileName2);
@@ -80,6 +80,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testFileExists() {
+        afterEach();
             if (accessServer == null) {
                 Integer pId = 12345;
                 Integer fId = 12346;
@@ -91,7 +92,7 @@ public class AccessServerTest {
                 accessServer = new AccessServer();
                 String uri = "/" + tempParentName + "/" + tempFileName + "/" + tempFileName2;
                 boolean result = accessServer.fileExists(uri);
-                afterEach();
+
                 assert (result);
                 System.out.println("testing random file");
                 uri = "/random_file.txt";
@@ -103,26 +104,27 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testCreateFile() {
+        afterEach();
         String uri = "/" + tempFileName;
         assert (accessServer.createFile(uri));
         assert (accessServer.fileExists(uri));
         assert (accessServer.deleteFile(uri));
-        afterEach();
     }
 
     @Test
     @SneakyThrows
     public void testCreateDir() {
+        afterEach();
         String uri = "/" + tempFileName;
         assert (accessServer.createDir(uri));
         assert (accessServer.dirExists(uri));
         assert (accessServer.deleteDir(uri));
-        afterEach();
     }
 
     @Test
     @SneakyThrows
     public void testCreateDir_failFileNotEmpty() {
+        afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
         String uri = "/" + tempParentName ;
@@ -132,12 +134,12 @@ public class AccessServerTest {
         assertThrows(RemoteException.class, () ->
                         accessServer.deleteDir(uri),
                 "Directory is not empty");
-        afterEach();
     }
 
     @Test
     @SneakyThrows
     public void testCreateDir_failDirIsFile() {
+        afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
         String uri = "/" + tempParentName + "/" + tempFileName ;
@@ -147,23 +149,23 @@ public class AccessServerTest {
         assertThrows(RemoteException.class, () ->
                         accessServer.deleteDir(uri),
                 "Directory not exists in db");
-        afterEach();
     }
 
     @Test
     @SneakyThrows
     public void testCreateDir_failDirNotExist() {
+        afterEach();
         String dir = UUID.randomUUID().toString();
         String uri = "/" + dir  ;
 
         assertThrows(RemoteException.class, () ->
                         accessServer.deleteDir(uri),
                 "Directory not exists in db");
-        afterEach();
     }
 
     @Test
     public void testCreateNewFileByUri_failFileAlreadyExist() {
+        afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
         String uri = "/" + tempParentName + "/" + tempFileName;
@@ -173,23 +175,23 @@ public class AccessServerTest {
         assertThrows(RemoteException.class, () ->
                         accessServer.createFile(uri),
                 "File exists in db");
-        afterEach();
     }
 
     @Test
     public void testCreateNewFileByUri_failParentNotExist() {
+        afterEach();
         String dummyParent = UUID.randomUUID().toString();
         String uri = "/" + "dummyParent" + "/" + tempFileName;
 
         assertThrows(RemoteException.class, () ->
                         accessServer.createFile(uri),
                 "parent not exist in db, uri: " + uri);
-        afterEach();
     }
 
     @Test
     @SneakyThrows
     public void testListFiles() {
+        afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
         Integer fId2 = 12347;
@@ -199,7 +201,7 @@ public class AccessServerTest {
         insertFileByName(tempFileName2, true, pid, fId2);
 
         String[] files = accessServer.listFiles(uri);
-        afterEach();
+
         assertNotNull(files);
         assertEquals(1, files.length);
         assertEquals(tempFileName, files[0]);
@@ -208,6 +210,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testListFiles_emptyNoFile() {
+        afterEach();
         Integer pid = 12345;
         Integer fId2 = 12347;
         String uri = "/" + tempParentName;
@@ -215,7 +218,7 @@ public class AccessServerTest {
         insertFileByName(tempFileName2, true, pid, fId2);
 
         String[] files = accessServer.listFiles(uri);
-        afterEach();
+
         assertNotNull(files);
         assertEquals(0, files.length);
     }
@@ -224,6 +227,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testListSubDir() {
+        afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
         Integer fId2 = 12347;
@@ -233,7 +237,7 @@ public class AccessServerTest {
         insertFileByName(tempFileName2, true, pid, fId2);
 
         String[] files = accessServer.listSubDirs(uri);
-        afterEach();
+
         assertNotNull(files);
         assertEquals(1, files.length);
         assertEquals(tempFileName2, files[0]);
@@ -242,6 +246,7 @@ public class AccessServerTest {
     @Test
     @SneakyThrows
     public void testListSubDir_noSubDir() {
+        afterEach();
         Integer pid = 12345;
         Integer fId = 12346;
         Integer fId2 = 12347;
@@ -251,7 +256,7 @@ public class AccessServerTest {
         insertFileByName(tempFileName2, false, pid, fId2);
 
         String[] files = accessServer.listSubDirs(uri);
-        afterEach();
+
         assertNotNull(files);
         assertEquals(0, files.length);
     }
