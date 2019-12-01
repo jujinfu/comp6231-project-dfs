@@ -115,8 +115,53 @@ public class FileDirInfoRepository {
         return null;
     }
 
+    public static FileDirInfo getFileDir(String uri){
+        if(!uri.startsWith(SLASH)){
+            throw new IllegalArgumentException("invalid path " + uri);
+        }
+        String[] list=uri.split(SLASH);
+        if(list.length == 0){ //is root
+            return getRoot();
+        }
+        if(list.length > 1){
+            list[0] = ROOT;
+        }
+        String fileName = list[list.length-1];
+        String parentName = list.length == 2 ? ROOT : list[list.length-2];
+        List<FileDirInfo> files = getFileInDir(fileName, parentName);
+        if(files.isEmpty()){
+            return null;
+        }
+        for(FileDirInfo file : files){
+            if(isSingleDirExist(list, file)){
+                return file;
+            }
+        }
+        return null;
+    }
+
     private static boolean isSingleFileExist(String[] list, FileDirInfo file){
         FileDirInfo parent = file.getParent();
+        if(list.length == 2 && ROOT.equals(parent.getName())){ // like /some.txt
+            return true;
+        }
+        for(int i = list.length-2; i >= 0; i--){
+            if(!list[i].equals(parent.getName())){
+                return false;
+            }
+            parent = parent.getParent();
+        }
+        return true;
+    }
+
+    private static boolean isSingleDirExist(String[] list, FileDirInfo file){
+        FileDirInfo parent = file.getParent();
+        if(!file.isDir()){
+            return false;
+        }
+        if(parent == null || !parent.isDir()){
+            return false;
+        }
         if(list.length == 2 && ROOT.equals(parent.getName())){ // like /some.txt
             return true;
         }
@@ -217,7 +262,7 @@ public class FileDirInfoRepository {
         }
         return ROOT.equals(parentUri) ?
                 getRoot() :
-                getFile(parentUri);
+                getFileDir(parentUri);
     }
 
     public static FileDirInfo createNewDir(FileDirInfo fileDirInfo) {

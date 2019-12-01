@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 public class AccessServer extends UnicastRemoteObject implements StorageManagementInterface, StorageServerInterface {
 
     private StorageServer storageServer = new StorageServer();
-    //private EntityManager em = EntityManagerHelper.getEntityManagerFactory().createEntityManager();
     private FileDirInfoRepository fileDirInfoRepository;
 
     private ServerSocket ss;
@@ -106,10 +105,10 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
             log.debug("IllegalArgumentException(\"URI is a directory\")");
             throw new IllegalArgumentException("URI is a directory");
         }
-        if(storageServer.deleteFile(uri)){
+      if(storageServer.deleteFile(uri)){
             log.debug("deleting file form db...");
             FileDirInfoRepository.deleteFileById(fileDirInfo.getId());
-        }
+      }
         log.debug("deleting file done, return true");
         return true;
     }
@@ -176,13 +175,12 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
         if(!dirExists(parent)){
             throw new RemoteException("Directory parent not exist in db, uri: " + uri);
         }
-        FileDirInfo file = FileDirInfoRepository.getFile(uri);
-        if(fileExists(file)){
+        FileDirInfo file = FileDirInfoRepository.getFileDir(uri);
+        if(dirExists(file)){
             throw new RemoteException("Directory exists in db");
         }
         try{
-            if(storageServer.createDir(uri)
-            ){
+            if(storageServer.createDir(uri)){
                 FileDirInfoRepository.createNewDir(uri);
             }
         }
@@ -197,7 +195,7 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
         if(!Utities.isUriValid(uri)){
             throw new IllegalArgumentException("Path is invalid uri: "+ uri);
         }
-        FileDirInfo dir = FileDirInfoRepository.getFile(uri);
+        FileDirInfo dir = FileDirInfoRepository.getFileDir(uri);
         if(!dirExists(dir)){
             throw new RemoteException("Directory not exists in db");
         }
@@ -205,8 +203,7 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
         if(subFiles.size() > 0){
             throw new RemoteException("Directory is not empty");
         }
-        if(storageServer.deleteDir(uri)
-        ){
+        if(storageServer.deleteDir(uri)){
             FileDirInfoRepository.deleteFileById(dir.getId());
         }
         return true;
