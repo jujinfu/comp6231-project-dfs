@@ -44,6 +44,18 @@ public class App extends Commands{
                 }else if(cmd.equals(delete_dir_cmd)){
                     System.out.println("deleting dir "+uri);
                     resp=client.deleteDir(uri);
+                } else if (cmd.equals(list_files_cmd)) {
+                    System.out.println("list files of dir"+uri);
+                    resp=client.listFiles(uri);
+                }else if (cmd.equals(list_dir_cmd)) {
+                    System.out.println("list files of dir"+uri);
+                    resp=client.listSubDirs(uri);
+                }else if (cmd.equals(exists_dir_cmd)) {
+                    System.out.println("list files of dir"+uri);
+                    resp=client.dirExists(uri);
+                }else if (cmd.equals(exists_file_cmd)) {
+                    System.out.println("list files of dir"+uri);
+                    resp=client.fileExists(uri);
                 }
                 System.out.println("Server resp: "+resp);
                 System.out.println("Command finished");

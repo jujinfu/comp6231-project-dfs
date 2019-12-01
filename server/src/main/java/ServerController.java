@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class ServerController extends Commands{
@@ -81,12 +82,62 @@ public class ServerController extends Commands{
         String cmd=msg.split(" ")[0];
         String uri=msg.split(" ")[1];
         AccessServer accessServer=new AccessServer();
+        StringBuilder returnMsg=new StringBuilder();
+
         if(cmd.equals(create_file_cmd)){
-            if(accessServer.createFile(uri))
-                return "Create File: "+uri+"...Done";
-        }else if(cmd.equals(delete_file_cmd)){
-            if(accessServer.deleteFile(uri))
-                return "Delete File: "+uri+"...Done";
+            if(accessServer.createFile(uri)) {
+                String syncResult=accessServer.syncCommand(msg);
+                returnMsg.append("Create File: " + uri + "...Done\n"+syncResult);
+            }else
+                returnMsg.append("Create File: "+uri+"...Failed");
+        }else if(cmd.equals(delete_file_cmd)) {
+            if (accessServer.deleteFile(uri)) {
+                String syncResult=accessServer.syncCommand(msg);
+                returnMsg.append( "Delete File: " + uri + "...Done\n"+syncResult);
+            }else
+                returnMsg.append( "Delete File: "+uri+"...Failed");
+        }else if(cmd.equals(create_dir_cmd)){
+            if(accessServer.createDir(uri)) {
+                String syncResult=accessServer.syncCommand(msg);
+                returnMsg.append( "Create Dir: " + uri + "...Done\n"+syncResult);
+            }else
+                returnMsg.append( "Create Dir: "+uri+"...Failed");
+        }else if(cmd.equals(delete_dir_cmd)){
+            if(accessServer.deleteDir(uri)){
+                String syncResult=accessServer.syncCommand(msg);
+                returnMsg.append( "Delete Dir: "+uri+"...Done\n"+syncResult);
+            }else
+                returnMsg.append( "Delete Dir: "+uri+"...Failed");
+        }else if(cmd.equals(list_files_cmd)){
+            String[] list=accessServer.listFiles(uri);
+            if(list!=null && list.length!=0){
+                String s="Total Files: "+list.length+"\n";
+                for (String s1 : list) {
+                    s+=s1+"\n";
+                }
+                returnMsg.append( s+"List File: "+uri+"...Done");
+            }else
+                returnMsg.append( "List File: "+uri+"...Failed");
+        }else if(cmd.equals(list_dir_cmd)){
+            String[] list=accessServer.listSubDirs(uri);
+            if(list!=null && list.length!=0){
+                String s="Total Dir: "+list.length+"\n";
+                for (String s1 : list) {
+                    s+=s1+"\n";
+                }
+                returnMsg.append( s+"List Dir: "+uri+"...Done");
+            }else
+                returnMsg.append( "List Dir: "+uri+"...Failed");
+        }else if(cmd.equals(exists_file_cmd)){
+            if(accessServer.fileExists(uri))
+                returnMsg.append( "File exists: "+uri+"...Done");
+            else
+                returnMsg.append( "File NOT exists: "+uri+"...Done");
+        }else if(cmd.equals(exists_dir_cmd)){
+            if(accessServer.dirExists(uri))
+                returnMsg.append( "Dir exists: "+uri+"...Done");
+            else
+                returnMsg.append( "Dir NOT exists: "+uri+"...Done");
         }
         return null;
     }

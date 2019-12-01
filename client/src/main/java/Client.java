@@ -45,6 +45,37 @@ public class Client extends Commands {
         return resp;
     }
 
+    public String listFiles(String uri) throws Exception {
+        Socket clientSocket=new Socket(serverIP,serverPort);
+        PrintWriter printWriter=new PrintWriter(clientSocket.getOutputStream(), true);
+        printWriter.println(list_files_cmd+" "+uri);
+        String resp = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())).readLine();
+        return resp;
+    }
+    public String listSubDirs(String uri) throws Exception {
+        Socket clientSocket=new Socket(serverIP,serverPort);
+        PrintWriter printWriter=new PrintWriter(clientSocket.getOutputStream(), true);
+        printWriter.println(list_dir_cmd+" "+uri);
+        String resp = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())).readLine();
+        return resp;
+    }
+
+    public String fileExists(String uri) throws Exception{
+        Socket clientSocket=new Socket(serverIP,serverPort);
+        PrintWriter printWriter=new PrintWriter(clientSocket.getOutputStream(), true);
+        printWriter.println(exists_file_cmd+" "+uri);
+        String resp = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())).readLine();
+        return resp;
+    }
+
+    public String dirExists(String uri) throws Exception{
+        Socket clientSocket=new Socket(serverIP,serverPort);
+        PrintWriter printWriter=new PrintWriter(clientSocket.getOutputStream(), true);
+        printWriter.println(exists_dir_cmd+" "+uri);
+        String resp = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())).readLine();
+        return resp;
+    }
+    //--------below are not supported yet
     public boolean uploadFile(String uri, File file) throws Exception {
         throw new UnsupportedOperationException("not implemented");
         //return false;
@@ -61,14 +92,8 @@ public class Client extends Commands {
         //return null;
     }
 
-    public String[] listSubDirs(String uri) throws Exception {
-        throw new UnsupportedOperationException("not implemented");
-        //return null;
-    }
 
-    public String[] listFiles(String uri) throws Exception {
-        throw new UnsupportedOperationException("not implemented");
-        //return null;
-    }
+
+
 
 }

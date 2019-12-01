@@ -7,9 +7,11 @@ import org.apache.commons.lang3.StringUtils;
 import storageServer.StorageServer;
 import storageServer.StorageServerInterface;
 
-import java.io.File;
+import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -21,60 +23,9 @@ import java.util.stream.Collectors;
 public class AccessServer extends UnicastRemoteObject implements StorageManagementInterface, StorageServerInterface {
 
     private StorageServer storageServer = new StorageServer();
-    private FileDirInfoRepository fileDirInfoRepository;
-
-    private ServerSocket ss;
-    private ArrayList<Socket> clients;
-
     public AccessServer() throws RemoteException {
         super();
     }
-
-    private String getServerConnection(String clientAddress) {
-        if (clientAddress.contains("location1")) {
-            return "server1";
-        } else if (clientAddress.contains("location2")) {
-            return "server2";
-        }
-        return "server1";
-    }
-
-    @Override
-    public boolean createFile(String uri) throws Exception {
-        /*
-        TODO
-         1. Check if file already exists in local db
-         2. if yes, check if parent are the same
-         3. If parent are not the same, check if parent exists, if yes, create file, else throw path not found exception
-         4. step 2, If parent are not the same, keep going to check if whole path of parent are exists
-         5. If all dirs in path are exists, create
-         6. Otherwise, throw path not found exception
-         7. to create, run create from storage server
-         8. Save DB records
-         9. return result
-        */
-        if (!Utities.isUriValid(uri)) {
-            throw new IllegalArgumentException("Path is not valid or file name is empty, uri:" + uri);
-        }
-        FileDirInfo parent = FileDirInfoRepository.getParentByUri(uri);
-        if(!FileDirInfoRepository.exists(parent)){
-            throw new RemoteException("parent not exist in db, uri: " + uri);
-        }
-        FileDirInfo file = FileDirInfoRepository.getFile(uri);
-        if(fileExists(file)){
-            throw new RemoteException("File exists in db");
-        }
-        try{
-            if(storageServer.createFile(uri)){
-                FileDirInfoRepository.createNewFile(uri);
-            }
-        }
-        catch(Exception e){
-            throw new Exception(e.getMessage());
-        }
-        return true;
-    }
-
 
     @Override
     public boolean fileExists(String uri) throws Exception {
@@ -85,51 +36,8 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
         return FileDirInfoRepository.exists(fileDirInfo);
     }
 
-    public boolean  fileExists(FileDirInfo file){
+    private boolean fileExists(FileDirInfo file){
         return FileDirInfoRepository.exists(file);
-    }
-
-    @Override
-    public boolean deleteFile(String uri) throws Exception {
-        log.debug("deleteFile uri =  " + uri);
-        if(!Utities.isUriValid(uri)){
-            throw new IllegalArgumentException("Path is invalid uri: {}"+ uri);
-        }
-        FileDirInfo fileDirInfo = FileDirInfoRepository.getFile(uri);
-        log.debug("deleteFile FileDirInfoRepository.getFile(uri) = {} ", fileDirInfo);
-        if(!fileExists(fileDirInfo)){
-            log.debug("RemoteException(\"file not found\")");
-            throw new RemoteException("file not found");
-        }
-        if(fileDirInfo.isDir()){
-            log.debug("IllegalArgumentException(\"URI is a directory\")");
-            throw new IllegalArgumentException("URI is a directory");
-        }
-      if(storageServer.deleteFile(uri)){
-            log.debug("deleting file form db...");
-            FileDirInfoRepository.deleteFileById(fileDirInfo.getId());
-      }
-        log.debug("deleting file done, return true");
-        return true;
-    }
-
-    @Override
-    public String getLastModifiedTime(String absoluteUri) throws Exception {
-        throw new UnsupportedOperationException("not implemented");
-        //return null;
-    }
-
-    @Override
-    public boolean uploadWithOverride(String absoluteUri, File file) throws Exception {
-        throw new UnsupportedOperationException("not implemented");
-        //return false;
-    }
-
-
-    @Override
-    public File download(String uri) throws Exception {
-        throw new UnsupportedOperationException("not implemented");
-        //return null;
     }
 
     @Override
@@ -167,6 +75,54 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
     }
 
     @Override
+    public boolean createFile(String uri) throws Exception {
+        if (!Utities.isUriValid(uri)) {
+            throw new IllegalArgumentException("Path is not valid or file name is empty, uri:" + uri);
+        }
+        FileDirInfo parent = FileDirInfoRepository.getParentByUri(uri);
+        if(!FileDirInfoRepository.exists(parent)){
+            throw new RemoteException("parent not exist in db, uri: " + uri);
+        }
+        FileDirInfo file = FileDirInfoRepository.getFile(uri);
+        if(fileExists(file)){
+            throw new RemoteException("File exists in db");
+        }
+        try{
+            if(storageServer.createFile(uri)){
+                FileDirInfoRepository.createNewFile(uri);
+            }
+        }
+        catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteFile(String uri) throws Exception {
+        log.debug("deleteFile uri =  " + uri);
+        if(!Utities.isUriValid(uri)){
+            throw new IllegalArgumentException("Path is invalid uri: {}"+ uri);
+        }
+        FileDirInfo fileDirInfo = FileDirInfoRepository.getFile(uri);
+        log.debug("deleteFile FileDirInfoRepository.getFile(uri) = {} ", fileDirInfo);
+        if(!fileExists(fileDirInfo)){
+            log.debug("RemoteException(\"file not found\")");
+            throw new RemoteException("file not found");
+        }
+        if(fileDirInfo.isDir()){
+            log.debug("IllegalArgumentException(\"URI is a directory\")");
+            throw new IllegalArgumentException("URI is a directory");
+        }
+      if(storageServer.deleteFile(uri)){
+            log.debug("deleting file form db...");
+            FileDirInfoRepository.deleteFileById(fileDirInfo.getId());
+      }
+        log.debug("deleting file done, return true");
+        return true;
+    }
+
+    @Override
     public boolean createDir(String uri) throws Exception {
         if (!Utities.isUriValid(uri)) {
             throw new IllegalArgumentException("Path is not valid or file name is empty, uri:" + uri);
@@ -175,8 +131,8 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
         if(!dirExists(parent)){
             throw new RemoteException("Directory parent not exist in db, uri: " + uri);
         }
-        FileDirInfo file = FileDirInfoRepository.getFileDir(uri);
-        if(dirExists(file)){
+        //FileDirInfo file = FileDirInfoRepository.getFileDir(uri);
+        if(dirExists(uri)){
             throw new RemoteException("Directory exists in db");
         }
         try{
@@ -189,14 +145,13 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
         }
         return true;
     }
-
     @Override
     public boolean deleteDir(String uri) throws Exception {
         if(!Utities.isUriValid(uri)){
             throw new IllegalArgumentException("Path is invalid uri: "+ uri);
         }
         FileDirInfo dir = FileDirInfoRepository.getFileDir(uri);
-        if(!dirExists(dir)){
+        if(!dirExists(uri)){
             throw new RemoteException("Directory not exists in db");
         }
         List<FileDirInfo> subFiles = FileDirInfoRepository.getChildren(dir);
@@ -215,17 +170,60 @@ public class AccessServer extends UnicastRemoteObject implements StorageManageme
         return fileExists(dir) && dir.isDir();
     }
 
-    public boolean dirExists(FileDirInfo dir) throws Exception {
+    private boolean dirExists(FileDirInfo dir) throws Exception {
         return fileExists(dir) && dir.isDir();
     }
 
     @Override
-    public void syncFile(String fromAbsoluteUri, String toAbsoluteUri) {
+    public String syncCommand(String command) throws IOException {
+
+        //this part is for demo only. will need to add server reg in database in future
+        String server1_internal_addr="172.31.10.138";
+        String server1_public_addr="34.202.163.106";
+        String server2_internal_addr="172.31.7.242";
+        String server2_public_addr="35.156.172.221";
+        int serverPort=9999;
+
+        Socket clientSocket=null;
+        InetAddress localAddr=InetAddress.getLocalHost();
+
+        if(localAddr.getHostAddress().equals(server1_internal_addr)){
+            clientSocket=new Socket(server2_public_addr,serverPort);
+        }else if(localAddr.getHostAddress().equals(server2_internal_addr)){
+            clientSocket=new Socket(server1_public_addr,serverPort);
+        }
+        PrintWriter printWriter=new PrintWriter(clientSocket.getOutputStream(), true);
+        printWriter.println(command);
+        String resp = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())).readLine();
+        clientSocket.close();
+        return "SYNC: "+resp;
+
+
+    }
+
+    //---------below are not supported by access server and client
+    @Override
+    public String getLastModifiedTime(String absoluteUri) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented");
+        //return null;
+    }
+
+    @Override
+    public boolean uploadWithOverride(String absoluteUri, File file) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("not implemented");
+        //return false;
+    }
+
+    @Override
+    public File download(String uri) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("not implemented");
+        //return null;
     }
 
     @Override
     public void updateFileMeta(String absoluteUri, String property) {
         throw new UnsupportedOperationException("not implemented");
     }
+
+
 }
