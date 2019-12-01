@@ -16,7 +16,9 @@ import java.util.List;
 public class FileDirInfoRepository {
 
     private static EntityManagerFactory factory = EntityManagerHelper.getEntityManagerFactory();
-    private static final String ROOT = "\\";
+    private static final String ROOT = "";
+    private static final String SLASH = "/";
+
 
     public static FileDirInfo getFileById(Integer id) {
         EntityManager em = factory.createEntityManager();
@@ -89,10 +91,10 @@ public class FileDirInfoRepository {
     }
 
     public static FileDirInfo getFile(String uri){
-        if(!uri.startsWith(ROOT)){
+        if(!uri.startsWith(SLASH)){
             throw new IllegalArgumentException("invalid path " + uri);
         }
-        String[] list=uri.split("\\\\");
+        String[] list=uri.split(SLASH);
         if(list.length == 0){ //is root
             return getRoot();
         }
@@ -152,7 +154,7 @@ public class FileDirInfoRepository {
     }
 
     public static FileDirInfo createNewFile(String uri) {
-        if(!uri.startsWith(ROOT)){
+        if(!uri.startsWith(SLASH)){
             return null;
         }
         FileDirInfo parent = getParentByUri(uri);
@@ -171,24 +173,44 @@ public class FileDirInfoRepository {
         return fileDirInfo;
     }
 
+    public static FileDirInfo createNewDir(String uri) {
+        if(!uri.startsWith(SLASH)){
+            return null;
+        }
+        FileDirInfo parent = getParentByUri(uri);
+        FileDirInfo fileDirInfo=FileDirInfo
+                .builder()
+                .isDir(true)
+                .name(getFileNameByUri(uri))
+                .parent(parent)
+                .status("Ready")
+                .build();
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(fileDirInfo);
+        em.getTransaction().commit();
+        em.close();
+        return fileDirInfo;
+    }
+
     private static String getParentPathByUri(String uri) {
-        String[] list = uri.split("\\\\");
+        String[] list = uri.split(SLASH);
         if (list.length == 0) { //is root
             return null;
         }
         return list.length == 2 ?
                 ROOT
-                : uri.substring(0, uri.lastIndexOf("\\") + 1);
+                : uri.substring(0, uri.lastIndexOf(SLASH));
     }
 
     private static String getFileNameByUri(String uri) {
         if (uri.length() == 1) {
             return ROOT;
         }
-        return uri.substring(uri.lastIndexOf("\\") + 1);
+        return uri.substring(uri.lastIndexOf(SLASH) + 1);
     }
 
-    private static FileDirInfo getParentByUri(String uri) {
+    public static FileDirInfo getParentByUri(String uri) {
         String parentUri = getParentPathByUri(uri);
         if (parentUri == null) {
             return null;
@@ -197,7 +219,6 @@ public class FileDirInfoRepository {
                 getRoot() :
                 getFile(parentUri);
     }
-
 
     public static FileDirInfo createNewDir(FileDirInfo fileDirInfo) {
         fileDirInfo.setDir(true);

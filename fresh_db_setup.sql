@@ -1,3 +1,5 @@
+drop database dfs;
+
 create database dfs;
 
 use dfs;
@@ -10,7 +12,7 @@ create table file_dir_info(
     is_dir boolean not null default false,
     status varchar(255) not null default 'Ready', -- status should be 'Ready','Locked','Removed'
     status_by_user varchar(255), -- mainly for locked by and removed by
-    parent int not null references file_dir_info(id)
+    parent int references file_dir_info(id)
 );
 
-insert into file_dir_info (name,is_dir,parent) values ('',true,1);
+insert into file_dir_info (name,is_dir) values ('',true);
